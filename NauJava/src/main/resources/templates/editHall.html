@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактировать зал</title>
+    <style>
+        .row-input {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<h2>Редактировать зал</h2>
+<form id="hallForm">
+    <label for="hallName">Имя:</label>
+    <input type="text" id="hallName" name="hallName" required>
+
+    <div>
+        <label for="active">Статус активный:</label>
+        <input type="checkbox" id="active" name="active">
+    </div>
+
+    <div id="rowsContainer">
+        <h3>Ряды</h3>
+    </div>
+
+    <button type="button" onclick="addRow()">Добавить ряд</button>
+    <button type="submit">Сохранить</button>
+</form>
+
+<script>
+    // Получаем hallId из пути URL
+    const hallId = window.location.pathname.split('/').pop();
+
+    let rows = [];  // Массив для хранения рядов
+
+    // Функция для загрузки данных зала
+    async function loadHallData() {
+        const response = await fetch(`/halls/get/${hallId}`);
+        const hallData = await response.json();
+
+        // Заполняем поля формы
+        document.getElementById('hallName').value = hallData.name;
+        document.getElementById('active').checked = hallData.active;
+
+        hallData.rows.forEach(row => {
+            rows.push(row); // Добавляем ряды в массив
+            addRow(row.row, row.seatCount); // Отображаем ряды
+        });
+    }
+
+    // Загружаем данные зала при загрузке страницы
+    window.onload = loadHallData;
+
+    // Функция для добавления нового ряда
+    function addRow(rowNumber = '', seatCount = '') {
+        const rowContainer = document.getElementById('rowsContainer');
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row-input';
+
+        // Добавляем номер ряда, если его нет
+        const rowLabel = document.createElement('label');
+        rowLabel.innerText = `Ряд ${rowNumber}: `;
+        rowDiv.appendChild(rowLabel);
+
+        const seatInput = document.createElement('input');
+        seatInput.type = 'number';
+        seatInput.name = `seatCount-${rowNumber}`;
+        seatInput.placeholder = 'Кол-во мест';
+        seatInput.value = seatCount;
+        seatInput.required = true;
+        rowDiv.appendChild(seatInput);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.innerText = 'Удалить';
+        deleteButton.onclick = () => {
+            // Удаляем ряд и пересчитываем нумерацию
+            rowDiv.remove();
+            updateRowNumbers();
+        };
+        rowDiv.appendChild(deleteButton);
+
+        rowContainer.appendChild(rowDiv);
+
+        // Добавляем новый ряд в массив
+        rows.push({ row: rowNumber || rows.length + 1, seatCount: seatCount });
+
+        updateRowNumbers(); // Обновляем нумерацию рядов
+    }
+
+    // Функция для обновления нумерации рядов
+    function updateRowNumbers() {
+        const rowInputs = document.querySelectorAll('.row-input');
+        rowInputs.forEach((rowDiv, index) => {
+            const rowLabel = rowDiv.querySelector('label');
+            const seatInput = rowDiv.querySelector('input');
+            const rowNumber = index + 1; // Нумерация начинается с 1
+            rowLabel.innerText = `Ряд ${rowNumber}: `;
+            seatInput.name = `seatCount-${rowNumber}`;
+            rows[index].row = rowNumber; // Обновляем номер ряда в массиве
+        });
+    }
+
+    // Обработка формы при отправке
+    document.getElementById('hallForm').onsubmit = async function(event) {
+        event.preventDefault();
+
+        const hallData = {
+            name: document.getElementById('hallName').value,
+            active: document.getElementById('active').checked,
+            rows: []
+        };
+
+        // Собираем данные из формы
+        document.querySelectorAll('#rowsContainer .row-input').forEach((rowDiv, index) => {
+            const seatCount = rowDiv.querySelector('input').value;
+            hallData.rows.push({ row: index + 1, seatCount: parseInt(seatCount, 10) });
+        });
+
+        // Отправляем данные на сервер
+        await fetch(`/halls/edit/${hallId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(hallData)
+        }).then(response => {
+            if (response.ok) {
+                alert('Зал успешно обновлен');
+            } else {
+                alert('Ошибка при обновлении зала');
+            }
+        }).catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка при отправке данных');
+        });
+    };
+</script>
+</body>
+</html>
