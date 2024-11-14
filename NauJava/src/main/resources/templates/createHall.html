@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать зал</title>
+    <style>
+        /* Простой CSS для оформления */
+        .row-input {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<h2>Создать зал</h2>
+<form id="hallForm">
+    <!-- Поле для имени зала -->
+    <label for="hallName">Имя:</label>
+    <input type="text" id="hallName" name="hallName" required>
+
+    <!-- Чекбокс для статуса зала -->
+    <div>
+        <label for="active">Статус активный:</label>
+        <input type="checkbox" id="active" name="active">
+    </div>
+
+    <!-- Блок для добавления рядов -->
+    <div id="rowsContainer">
+        <h3>Ряды</h3>
+    </div>
+
+    <!-- Кнопка для добавления ряда -->
+    <button type="button" onclick="addRow()">Добавить ряд</button>
+
+    <!-- Кнопка для сохранения данных -->
+    <button type="submit">Сохранить</button>
+</form>
+
+<script>
+    let rowCount = 0;
+
+    // Функция для добавления нового ряда
+    function addRow() {
+        rowCount++;
+        const rowContainer = document.getElementById('rowsContainer');
+
+        // Создаем блок для ряда
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row-input';
+        rowDiv.id = `row-${rowCount}`;
+
+        // Добавляем номер ряда
+        const rowLabel = document.createElement('label');
+        rowLabel.innerText = `Ряд ${rowCount}: `;
+        rowDiv.appendChild(rowLabel);
+
+        // Поле для ввода количества мест
+        const seatInput = document.createElement('input');
+        seatInput.type = 'number';
+        seatInput.name = `seatCount-${rowCount}`;
+        seatInput.placeholder = 'Кол-во мест';
+        seatInput.required = true;
+        rowDiv.appendChild(seatInput);
+
+        // Кнопка для удаления ряда
+        const deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.innerText = 'Удалить';
+        deleteButton.onclick = () => removeRow(rowDiv.id);
+        rowDiv.appendChild(deleteButton);
+
+        rowContainer.appendChild(rowDiv);
+    }
+
+    // Функция для удаления ряда
+    function removeRow(rowId) {
+        const row = document.getElementById(rowId);
+        row.remove();
+    }
+
+    // Обработка формы при отправке
+    document.getElementById('hallForm').onsubmit = function(event) {
+        event.preventDefault();
+        const hallData = {
+            name: document.getElementById('hallName').value,
+            active: document.getElementById('active').checked,
+            rows: []
+        };
+
+        // Собираем данные о рядах
+        for (let i = 1; i <= rowCount; i++) {
+            const seatCountInput = document.querySelector(`input[name="seatCount-${i}"]`);
+            if (seatCountInput) {
+                hallData.rows.push({ row: i, seatCount: parseInt(seatCountInput.value, 10) });
+            }
+        }
+
+        // Отправляем данные на сервер
+        fetch('/halls/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(hallData)
+        }).then(response => {
+            if (response.ok) {
+                alert('Зал успешно создан');
+            } else {
+                alert('Ошибка при создании зала');
+            }
+        }).catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка при отправке данных');
+        });
+    };
+</script>
+</body>
+</html>

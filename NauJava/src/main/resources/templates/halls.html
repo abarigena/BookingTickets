@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список залов</title>
+    <style>
+        .hall-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .hall-button:hover {
+            background-color: #45a049;
+        }
+
+        .create-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .create-button:hover {
+            background-color: #0b7dda;
+        }
+
+        .container {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Управление залами</h2>
+
+    <!-- Кнопка для создания нового зала -->
+    <a href="/halls/create" class="create-button">Создать зал</a>
+
+    <h3>Существующие залы</h3>
+    <div id="hallButtons">
+        <!-- Используем Thymeleaf для перебора залов -->
+        <div th:each="hall : ${halls}">
+            <a th:href="@{/halls/edit/{id}(id=${hall.id})}" class="hall-button" th:text="'Зал ' + ${hall.name}"></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
