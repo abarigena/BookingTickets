@@ -4,36 +4,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.abarigena.NauJava.DTO.HallRequestDto;
+import ru.abarigena.NauJava.Service.HallRowService.HallRowService;
 import ru.abarigena.NauJava.Service.HallService.HallService;
 import ru.abarigena.NauJava.Entities.Hall;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/halls")
+@RequestMapping("/api/halls")
 public class HallController {
 
     private final HallService hallService;
+    private final HallRowService hallRowService;
 
     @Autowired
-    public HallController(HallService hallService) {
+    public HallController(HallService hallService, HallRowService hallRowService) {
         this.hallService = hallService;
+        this.hallRowService = hallRowService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Hall> createHall(@RequestBody HallRequestDto hallDto) {
-        Hall createdHall = hallService.createHall(hallDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdHall);
-    }
-
-    @PostMapping("/edit/{id}")
-    public ResponseEntity<Hall> updateHall(@PathVariable Long id, @RequestBody HallRequestDto hallDto) {
-        Hall updatedHall = hallService.updateHall(id, hallDto);
-        return ResponseEntity.ok(updatedHall);
-    }
-
-    @PostMapping("/delete/{hallName}")
-    public ResponseEntity<Hall> deleteHall(@PathVariable String hallName) {
-        hallService.deleteHall(hallName);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Hall> deleteHall(@PathVariable Long id) {
+        hallService.deleteHall(id);
         return ResponseEntity.noContent().build();
     }
 }
