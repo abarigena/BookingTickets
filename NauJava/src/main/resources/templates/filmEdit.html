@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Film</title>
+</head>
+<body>
+<h1>Edit Film</h1>
+<form th:action="@{/films/edit/{id}(id=${film.id})}" th:object="${film}" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" th:field="*{title}" required/><br/>
+
+    <label for="minAge">Minimum Age:</label>
+    <input type="number" id="minAge" name="minAge" th:field="*{minAge}"/><br/>
+
+    <label for="duration">Duration (minutes):</label>
+    <input type="number" id="duration" name="duration" th:field="*{duration}"/><br/>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" th:field="*{description}"></textarea><br/>
+
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" th:field="*{imageUrl}"/><br/>
+
+    <button type="submit">Save Changes</button>
+</form>
+<form th:action="@{/films/delete/{id}(id=${film.id})}" method="post">
+    <button type="submit">Delete Film</button>
+</form>
+<a href="/films">Back to Films</a>
+</body>
+</html>

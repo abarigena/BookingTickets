@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import ru.abarigena.NauJava.Entities.Film;
+import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallShedule;
 
 import java.time.LocalDateTime;
@@ -18,4 +20,8 @@ public interface HallSheduleRepository extends CrudRepository<HallShedule, Long>
         "where hs.startTime >= :startDate "+
         "order by DATE(hs.startTime), f.title, h.name")
     List<HallShedule> findShedulesGroupedByDayFilmAndHall(@Param("startDate") LocalDateTime startDate);
+
+    @Query("SELECT s FROM HallShedule s WHERE s.film = :film AND s.hall = :hall")
+    List<HallShedule> findByFilmAndHall(@Param("film") Film film, @Param("hall") Hall hall);
+
 }

@@ -35,4 +35,11 @@ public class HallRowController {
         hallRowService.deleteRow(hallRow);
         return "redirect:/halls/edit/" + hallId;  // Перенаправление на страницу редактирования зала
     }
+
+    @PostMapping("/update/{id}")
+    public String updateRow(@PathVariable("id") Long id, @RequestParam int seatCount, @RequestParam Long hallId) {
+        hallRowService.updateRow(id, seatCount); // Вызов метода из сервиса
+        return "redirect:/halls/edit/" + hallId; // Перенаправление на страницу редактирования зала
+    }
+
 }
