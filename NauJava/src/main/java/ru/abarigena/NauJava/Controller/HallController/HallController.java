@@ -28,4 +28,10 @@ public class HallController {
         hallService.deleteHall(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/all")
+    @ResponseBody
+    public List<Hall> getAllHalls() {
+        return hallService.findAllHalls();
+    }
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Hall Schedule</title>
+</head>
+<body>
+<h1>Create Hall Schedule</h1>
+
+<form action="#" th:action="@{/hallShedules/create}" method="post">
+    <!-- Выбор фильма -->
+    <label for="film">Film:</label>
+    <select id="film" name="filmId" required>
+        <option th:each="film : ${films}" th:value="${film.id}" th:text="${film.title}"></option>
+    </select>
+
+    <!-- Выбор зала -->
+    <label for="hall">Hall:</label>
+    <select id="hall" name="hallId" required>
+        <option th:each="hall : ${halls}" th:value="${hall.id}" th:text="${hall.name}"></option>
+    </select>
+
+    <!-- Даты -->
+    <label>Dates:</label>
+    <div id="date-container">
+        <div>
+            <input type="date" name="dates" required />
+            <button type="button" onclick="removeField(this)">Remove</button>
+        </div>
+    </div>
+    <button type="button" onclick="addDateField()">Add Date</button>
+
+    <!-- Время -->
+    <label>Times:</label>
+    <div id="time-container">
+        <div>
+            <input type="time" name="times" required />
+            <button type="button" onclick="removeField(this)">Remove</button>
+        </div>
+    </div>
+    <button type="button" onclick="addTimeField()">Add Time</button>
+
+    <button type="submit">Create Schedule</button>
+</form>
+
+<script>
+    function addDateField() {
+        const container = document.getElementById("date-container");
+        const div = document.createElement("div");
+        div.innerHTML = '<input type="date" name="dates" required /> <button type="button" onclick="removeField(this)">Remove</button>';
+        container.appendChild(div);
+    }
+
+    function addTimeField() {
+        const container = document.getElementById("time-container");
+        const div = document.createElement("div");
+        div.innerHTML = '<input type="time" name="times" required /> <button type="button" onclick="removeField(this)">Remove</button>';
+        container.appendChild(div);
+    }
+
+    function removeField(button) {
+        const container = button.parentNode;
+        container.remove();
+    }
+</script>
+
+<a href="/hallShedules">Back to Hall Schedules</a>
+</body>
+</html>

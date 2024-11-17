@@ -80,12 +80,16 @@
 <h3>Ряды:</h3>
 <div id="rows">
     <div th:each="row : ${rows}">
-        <form action="#" th:action="@{/hallRows/delete/{id}(id=${row.id})}" method="post">
+        <form action="#" th:action="@{/hallRows/update/{id}(id=${row.id})}" method="post">
             <input type="hidden" th:value="${hall.id}" name="hallId" />
             <p>Ряд <span th:text="${row.row}">1</span>:
-                Количество мест: <input type="number" th:value="${row.seatCount}" name="seatCount" required="true" min="1" />
-                <button type="submit" class="delete-button">Удалить ряд</button>
+                Количество мест: <input type="number" name="seatCount" th:value="${row.seatCount}" required="true" min="1" />
+                <button type="submit">Обновить ряд</button>
             </p>
+        </form>
+        <form action="#" th:action="@{/hallRows/delete/{id}(id=${row.id})}" method="post">
+            <input type="hidden" th:value="${hall.id}" name="hallId" />
+            <button type="submit" class="delete-button">Удалить ряд</button>
         </form>
     </div>
 </div>

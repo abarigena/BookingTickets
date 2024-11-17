@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Films</title>
+</head>
+<body>
+<h1>Films</h1>
+<a href="/films/create"><button>Add Film</button></a>
+<div>
+    <h2>Existing Films</h2>
+    <ul>
+        <li th:each="film : ${films}">
+            <a th:href="@{/films/edit/{id}(id=${film.id})}">
+                <button th:text="${film.title}"></button>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

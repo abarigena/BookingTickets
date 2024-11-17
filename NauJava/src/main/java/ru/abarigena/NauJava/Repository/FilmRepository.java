@@ -6,4 +6,5 @@ import ru.abarigena.NauJava.Entities.Film;
 
 @RepositoryRestResource
 public interface FilmRepository extends CrudRepository<Film, Long> {
+
 }
