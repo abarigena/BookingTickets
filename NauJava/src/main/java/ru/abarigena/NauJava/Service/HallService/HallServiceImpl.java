@@ -8,8 +8,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import ru.abarigena.NauJava.DTO.HallRequestDto;
-import ru.abarigena.NauJava.DTO.RowRequestDto;
 import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallRow;
 import ru.abarigena.NauJava.Repository.HallRepository;
@@ -34,17 +32,17 @@ public class HallServiceImpl implements HallService {
     }
 
     @Override
-    public void deleteHall(String hallName)
+    public void deleteHall(Long id)
     {
 
         TransactionStatus status = transactionManager.getTransaction(new
                 DefaultTransactionDefinition());
         try {
 
-            List<HallRow> hallRows = hallRowRepository.findHallRowsByHallName(hallName);
+            List<HallRow> hallRows = hallRowRepository.findHallRowsByHallId(id);
             hallRowRepository.deleteAll(hallRows);
 
-            hallRepository.deleteByName(hallName);
+            hallRepository.deleteById(id);
 
             transactionManager.commit(status);
         }
@@ -52,55 +50,6 @@ public class HallServiceImpl implements HallService {
             transactionManager.rollback(status);
             throw e;
         }
-    }
-
-    /**
-     * @param hallRequestDto
-     * @return
-     */
-    @Override
-    public Hall createHall(HallRequestDto hallRequestDto) {
-        Hall hall = new Hall();
-        hall.setName(hallRequestDto.getName());
-        hall.setActive(hallRequestDto.isActive());
-
-        Hall savedHall = hallRepository.save(hall);
-
-        for(RowRequestDto rowDto : hallRequestDto.getRows()) {
-            HallRow hallRow = new HallRow();
-            hallRow.setRow(rowDto.getRow());
-            hallRow.setSeatCount(rowDto.getSeatCount());
-            hallRow.setHall(savedHall);
-            hallRowRepository.save(hallRow);
-        }
-        return savedHall;
-    }
-
-    /**
-     * @param id
-     * @param hallRequestDto
-     * @return
-     */
-
-    @Transactional
-    @Override
-    public Hall updateHall(Long id, HallRequestDto hallRequestDto) {
-        Hall hall = hallRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Hall not found"));
-
-        hall.setName(hallRequestDto.getName());
-        hall.setActive(hallRequestDto.isActive());
-
-        hallRowRepository.deleteByHall(hall);
-
-        for (RowRequestDto rowDto : hallRequestDto.getRows()) {
-            HallRow hallRow = new HallRow();
-            hallRow.setRow(rowDto.getRow());
-            hallRow.setSeatCount(rowDto.getSeatCount());
-            hallRow.setHall(hall);
-            hallRowRepository.save(hallRow);
-        }
-        return hall;
     }
 
     /**
@@ -118,5 +67,37 @@ public class HallServiceImpl implements HallService {
     @Override
     public List<Hall> findAllHalls() {
         return (List<Hall>) hallRepository.findAll();
+    }
+
+    /**
+     * @param name
+     * @param active
+     * @return
+     */
+    @Override
+    public Hall createHall(String name, boolean active) {
+        Hall hall = new Hall();
+        hall.setName(name);
+        hall.setActive(active);
+        return hallRepository.save(hall);
+    }
+
+    /**
+     * @param id
+     * @param name
+     * @param active
+     * @return
+     */
+    @Override
+    public Hall updateHall(Long id, String name, boolean active) {
+        // Найти зал по id
+        Hall hall = hallRepository.findById(id).orElseThrow(() -> new RuntimeException("Hall not found"));
+
+        // Обновить поля
+        hall.setName(name);
+        hall.setActive(active);
+
+        // Сохранить обновленный зал
+        return hallRepository.save(hall);
     }
 }

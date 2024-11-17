@@ -37,4 +37,10 @@ public interface HallRowRepository extends CrudRepository<HallRow, Long> {
 
     @Query("SELECT hr FROM HallRow hr WHERE hr.hall.id = :hallId")
     List<HallRow> findHallRowsByHallId(@Param("hallId") Long hallId);
+
+    @Query("SELECT MAX(h.row) FROM HallRow h WHERE h.hall = :hall")
+    Integer findMaxRowByHall(Hall hall);
+
+    // Получить все ряды в зале, отсортированные по номеру ряда
+    List<HallRow> findByHallOrderByRow(Hall hall);
 }

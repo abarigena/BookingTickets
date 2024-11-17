@@ -7,13 +7,14 @@
     <style>
         .hall-button {
             display: inline-block;
-            margin: 10px;
+            margin: 5px;
             padding: 10px;
             background-color: #4CAF50;
             color: white;
             text-align: center;
             text-decoration: none;
             border-radius: 5px;
+            width: 100%; /* Чтобы кнопки занимали всю ширину столбца */
         }
 
         .hall-button:hover {
@@ -38,6 +39,20 @@
         .container {
             text-align: center;
         }
+
+        /* Стили для обертки столбцов и групп кнопок */
+        .hall-columns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .hall-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -48,10 +63,14 @@
     <a href="/halls/create" class="create-button">Создать зал</a>
 
     <h3>Существующие залы</h3>
-    <div id="hallButtons">
-        <!-- Используем Thymeleaf для перебора залов -->
-        <div th:each="hall : ${halls}">
-            <a th:href="@{/halls/edit/{id}(id=${hall.id})}" class="hall-button" th:text="'Зал ' + ${hall.name}"></a>
+    <div class="hall-columns">
+        <!-- Используем Thymeleaf для разбивки залов по 5 в столбце -->
+        <div th:each="column : ${#numbers.sequence(0, halls.size() / 5)}" class="hall-column">
+            <div th:each="hall, iterStat : ${halls}">
+                <div th:if="${iterStat.index >= column * 5 && iterStat.index < (column + 1) * 5}">
+                    <a th:href="@{/halls/edit/{id}(id=${hall.id})}" class="hall-button" th:text="'Зал ' + ${hall.name}"></a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,20 +1,15 @@
 package ru.abarigena.NauJava.Controller.HallController;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.abarigena.NauJava.DTO.HallRequestDto;
-import ru.abarigena.NauJava.DTO.RowRequestDto;
+import org.springframework.web.bind.annotation.*;
 import ru.abarigena.NauJava.Entities.Hall;
+import ru.abarigena.NauJava.Entities.HallRow;
 import ru.abarigena.NauJava.Service.HallRowService.HallRowService;
 import ru.abarigena.NauJava.Service.HallService.HallService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/halls")
@@ -37,34 +32,39 @@ public class HallViewController {
     }
 
     @GetMapping("/create")
-    public String createHallView() {
+    public String createHallForm(Model model) {
+        model.addAttribute("hall", new Hall());  // Пустой объект для создания нового зала
         return "createHall";
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<HallRequestDto> getHall(@PathVariable Long id) {
-        Hall hall = hallService.findHallById(id);
-        List<RowRequestDto> rows = hallRowService.getRowsByHallId(hall.getId()).stream()
-                .map(row -> new RowRequestDto(row.getRow(), row.getSeatCount()))
-                .collect(Collectors.toList());
-
-        HallRequestDto hallDto = new HallRequestDto();
-        hallDto.setName(hall.getName());
-        hallDto.setActive(hall.isActive());
-        hallDto.setRows(rows);
-
-        return ResponseEntity.ok(hallDto);
-    }
-
+    // Страница для редактирования существующего зала
     @GetMapping("/edit/{id}")
-    public String editHallView(@PathVariable Long id, Model model) {
+    public String editHallForm(@PathVariable("id") Long id, Model model) {
         Hall hall = hallService.findHallById(id);
-        List<RowRequestDto> rows = hallRowService.getRowsByHallId(hall.getId()).stream()
-                .map(row -> new RowRequestDto(row.getRow(), row.getSeatCount()))
-                .collect(Collectors.toList());
-
+        List<HallRow> rows = hallRowService.getRowsByHallId(id);
         model.addAttribute("hall", hall);
-        model.addAttribute("rows", rows);
-        return "editHall"; // Страница редактирования зала
+        model.addAttribute("rows", rows);  // Существующие ряды для редактирования
+        return "editHall";
     }
+
+    // Обработка создания нового зала
+    @PostMapping("/create")
+    public String createHall(@ModelAttribute Hall hall) {
+        Hall exist = hallService.createHall(hall.getName(), hall.isActive());
+        return "redirect:/halls/edit/" + exist.getId();  // Перенаправление после создания
+    }
+
+    // Обработка обновления существующего зала
+    @PostMapping("/edit/{id}")
+    public String updateHall(@PathVariable("id") Long id, @ModelAttribute Hall hall) {
+        hallService.updateHall(id, hall.getName(), hall.isActive());
+        return "redirect:/halls";  // Перенаправление после обновления
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteHall(@PathVariable Long id) {
+        hallService.deleteHall(id);
+        return "redirect:/halls";  // Перенаправление на страницу со всеми залами после удаления
+    }
+
 }
