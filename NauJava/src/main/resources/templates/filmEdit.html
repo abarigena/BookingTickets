@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>Edit Film</h1>
-<form th:action="@{/films/edit/{id}(id=${film.id})}" th:object="${film}" method="post">
+<form th:action="@{/admin/films/edit/{id}(id=${film.id})}" th:object="${film}" method="post">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" th:field="*{title}" required/><br/>
 
@@ -23,9 +23,9 @@
 
     <button type="submit">Save Changes</button>
 </form>
-<form th:action="@{/films/delete/{id}(id=${film.id})}" method="post">
+<form th:action="@{/admin/films/delete/{id}(id=${film.id})}" method="post">
     <button type="submit">Delete Film</button>
 </form>
-<a href="/films">Back to Films</a>
+<a href="/admin/films">Back to Films</a>
 </body>
 </html>

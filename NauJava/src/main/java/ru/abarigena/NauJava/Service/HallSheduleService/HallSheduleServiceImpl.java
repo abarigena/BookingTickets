@@ -7,9 +7,13 @@ import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallShedule;
 import ru.abarigena.NauJava.Repository.HallSheduleRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class HallSheduleServiceImpl implements HallSheduleService {
@@ -22,8 +26,10 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param id
-     * @return
+     * Находит расписание по его ID.
+     *
+     * @param id ID расписания
+     * @return объект {@link HallShedule}
      */
     @Override
     public HallShedule findHallSheduleById(Long id) {
@@ -31,7 +37,9 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @return
+     * Возвращает список всех расписаний.
+     *
+     * @return список объектов {@link HallShedule}
      */
     @Override
     public List<HallShedule> findAllHallShedules() {
@@ -39,8 +47,10 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param date
-     * @return
+     * Находит расписания по указанной дате.
+     *
+     * @param date дата
+     * @return список расписаний
      */
     @Override
     public List<HallShedule> findAllHallShedulesByDate(LocalDateTime date) {
@@ -48,8 +58,10 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param film
-     * @return
+     * Находит расписания по фильму.
+     *
+     * @param film объект {@link Film}
+     * @return список расписаний
      */
     @Override
     public List<HallShedule> findAllHallShedulesByFilm(Film film) {
@@ -57,8 +69,10 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param hall
-     * @return
+     * Находит расписания по залу.
+     *
+     * @param hall объект {@link Hall}
+     * @return список расписаний
      */
     @Override
     public List<HallShedule> findAllHallShedulesByHall(Hall hall) {
@@ -66,10 +80,12 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param date
-     * @param film
-     * @param hall
-     * @return
+     * Создает новое расписание.
+     *
+     * @param date дата и время начала
+     * @param film объект {@link Film}
+     * @param hall объект {@link Hall}
+     * @return созданное расписание {@link HallShedule}
      */
     @Override
     public HallShedule createHallShedule(LocalDateTime date, Film film, Hall hall) {
@@ -83,11 +99,13 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param id
-     * @param date
-     * @param film
-     * @param hall
-     * @return
+     * Обновляет расписание.
+     *
+     * @param id   ID расписания
+     * @param date новая дата и время начала
+     * @param film объект {@link Film}
+     * @param hall объект {@link Hall}
+     * @return обновленное расписание {@link HallShedule}
      */
     @Override
     public HallShedule updateHallShedule(Long id, LocalDateTime date, Film film, Hall hall) {
@@ -101,10 +119,65 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param id
+     * Удаляет расписание по его ID.
+     *
+     * @param id ID расписания
      */
     @Override
     public void deleteHallShedule(Long id) {
         hallSheduleRepository.deleteById(id);
+    }
+
+    /**
+     * Находит уникальные даты расписаний.
+     *
+     * @return список уникальных дат
+     */
+    @Override
+    public List<LocalDate> findUniqueDays() {
+        List<java.sql.Date> dates = hallSheduleRepository.findDistinctDates();
+        List<LocalDate> localDates = dates.stream()
+                .map(date -> date.toLocalDate())
+                .collect(Collectors.toList());
+        return localDates;
+    }
+
+    /**
+     * Возвращает расписания, сгруппированные по дате, фильму и залу.
+     *
+     * @return карта сгруппированных расписаний
+     */
+    @Override
+    public Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getGroupedSchedules() {
+        List<HallShedule> schedules = (List<HallShedule>) hallSheduleRepository.findAll();
+        return schedules.stream()
+                .collect(Collectors.groupingBy(
+                        schedule -> schedule.getStartTime().toLocalDate(),
+                        Collectors.groupingBy(
+                                HallShedule::getFilm,
+                                Collectors.groupingBy(
+                                        HallShedule::getHall
+                                )
+                        )
+                ));
+    }
+
+    /**
+     * Возвращает расписания с временем начала, сгруппированным по ID.
+     *
+     * @return карта расписаний
+     */
+    @Override
+    public Map<Long, List<LocalTime>> getSchedules() {
+        List<HallShedule> shedules = (List<HallShedule>) hallSheduleRepository.findAll();
+
+        return shedules.stream()
+                .collect(Collectors.groupingBy(
+                        HallShedule::getId, // Группируем по id
+                        Collectors.mapping(
+                                shedule -> shedule.getStartTime().toLocalTime(), // Извлекаем LocalTime из startTime
+                                Collectors.toList() // Собираем в список
+                        )
+                ));
     }
 }

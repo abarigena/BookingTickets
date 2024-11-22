@@ -12,7 +12,7 @@ import ru.abarigena.NauJava.Service.HallService.HallService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/halls")
+@RequestMapping("/admin/halls")
 public class HallViewController {
 
     private final HallService hallService;
@@ -51,20 +51,22 @@ public class HallViewController {
     @PostMapping("/create")
     public String createHall(@ModelAttribute Hall hall) {
         Hall exist = hallService.createHall(hall.getName(), hall.isActive());
-        return "redirect:/halls/edit/" + exist.getId();  // Перенаправление после создания
+        return "redirect:/admin/halls/edit/" + exist.getId();  // Перенаправление после создания
     }
 
     // Обработка обновления существующего зала
     @PostMapping("/edit/{id}")
     public String updateHall(@PathVariable("id") Long id, @ModelAttribute Hall hall) {
         hallService.updateHall(id, hall.getName(), hall.isActive());
-        return "redirect:/halls";  // Перенаправление после обновления
+        return "redirect:/admin/halls";  // Перенаправление после обновления
     }
 
     @PostMapping("/delete/{id}")
     public String deleteHall(@PathVariable Long id) {
         hallService.deleteHall(id);
-        return "redirect:/halls";  // Перенаправление на страницу со всеми залами после удаления
+        return "redirect:/admin/halls";  // Перенаправление на страницу со всеми залами после удаления
     }
+
+
 
 }

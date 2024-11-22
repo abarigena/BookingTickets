@@ -6,7 +6,7 @@
 <body>
 <h1>Create Hall Schedule</h1>
 
-<form action="#" th:action="@{/hallShedules/create}" method="post">
+<form action="#" th:action="@{/admin/hallShedules/create}" method="post">
     <!-- Выбор фильма -->
     <label for="film">Film:</label>
     <select id="film" name="filmId" required>
@@ -63,6 +63,6 @@
     }
 </script>
 
-<a href="/hallShedules">Back to Hall Schedules</a>
+<a href="/admin/hallShedules">Back to Hall Schedules</a>
 </body>
 </html>

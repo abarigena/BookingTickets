@@ -2,6 +2,9 @@ package ru.abarigena.NauJava.Entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Представляет зал кинотеатра с уникальным названием и статусом активности.
+ */
 @Entity
 @Table(name = "halls")
 public class Hall {
@@ -17,6 +20,10 @@ public class Hall {
 
     @Column
     private boolean active;
+
+    /**
+     *Геттеры и сеттеры для каждого поля
+     **/
 
     public String getName() {
         return name;

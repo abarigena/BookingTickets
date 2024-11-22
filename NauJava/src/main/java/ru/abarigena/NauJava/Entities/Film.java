@@ -2,6 +2,9 @@ package ru.abarigena.NauJava.Entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Представляет фильм с информацией о названии, возрастном ограничении, длительности, описании и ссылке на изображение.
+ */
 @Entity
 @Table(name = "films")
 public class Film {
@@ -23,6 +26,10 @@ public class Film {
 
     @Column
     private String imageUrl;
+
+    /**
+     *Геттеры и сеттеры для каждого поля
+     **/
 
     public String getTitle() {
         return title;

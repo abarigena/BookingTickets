@@ -10,7 +10,7 @@ import ru.abarigena.NauJava.Service.FilmService.FilmService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/films")
+@RequestMapping("/admin/films")
 public class FilmController {
 
     private final FilmService filmService;
@@ -24,7 +24,7 @@ public class FilmController {
     public String createFilm(@ModelAttribute Film film){
         Film exist = filmService.createFilm(film.getTitle(), film.getMinAge(), film.getDuration(),
                 film.getDescription(), film.getImageUrl());
-        return "redirect:/films/edit/" + exist.getId();
+        return "redirect:/admin/films/edit/" + exist.getId();
     }
 
     @GetMapping("/create")
@@ -37,7 +37,7 @@ public class FilmController {
     public String editFilm(@PathVariable("id") Long id, @ModelAttribute Film film){
         filmService.updateFilm(id, film.getTitle(), film.getMinAge(), film.getDuration(),
                 film.getDescription(), film.getImageUrl());
-        return "redirect:/films";
+        return "redirect:/admin/films";
     }
 
     @GetMapping("/edit/{id}")
@@ -57,7 +57,7 @@ public class FilmController {
     @PostMapping("/delete/{id}")
     public String deleteFilm(@PathVariable("id") Long id){
         filmService.deleteFilm(id);
-        return "redirect:/films";
+        return "redirect:/admin/films";
     }
 
     @GetMapping("/all")
