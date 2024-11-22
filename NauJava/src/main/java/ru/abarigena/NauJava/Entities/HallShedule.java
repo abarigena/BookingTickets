@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Представляет расписание зала, включая время начала, фильм и зал.
+ */
 @Entity
 @Table(name = "hallShedules")
 public class HallShedule {
@@ -19,6 +22,10 @@ public class HallShedule {
 
     @ManyToOne
     private Hall hall;
+
+    /**
+     *Геттеры и сеттеры для каждого поля
+     **/
 
     public void setId(Long id) {
         this.id = id;

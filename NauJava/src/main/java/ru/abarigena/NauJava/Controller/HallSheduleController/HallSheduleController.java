@@ -1,6 +1,7 @@
 package ru.abarigena.NauJava.Controller.HallSheduleController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping("/hallShedules")
+@RequestMapping("/admin/hallShedules")
 public class HallSheduleController {
     private final HallSheduleService hallSheduleService;
     private final FilmService filmService;
@@ -54,7 +56,7 @@ public class HallSheduleController {
             }
         }
 
-        return "redirect:/hallShedules";
+        return "redirect:/admin/hallShedules";
     }
 
     @GetMapping("/edit/{id}")
@@ -78,12 +80,32 @@ public class HallSheduleController {
 
         hallSheduleService.updateHallShedule(id, newStartTime, filmService.findFimById(filmId),
                 hallService.findHallById(hallId));
-        return "redirect:/hallShedules";
+        return "redirect:/admin/hallShedules";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteHallShedule(@PathVariable Long id) {
         hallSheduleService.deleteHallShedule(id);
-        return "redirect:/hallShedules";
+        return "redirect:/admin/hallShedules";
+    }
+
+    @GetMapping
+    public String getHallSchedules(
+            @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
+            Model model) {
+        List<LocalDate> uniqueDays = hallSheduleService.findUniqueDays();
+
+        // Получаем все расписания, сгруппированные так, чтобы включать объекты HallShedule
+        Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> groupedSchedules =
+                hallSheduleService.getGroupedSchedules();
+
+        // Фильтруем только по указанному дню, если он передан
+        Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> filteredSchedules =
+                day != null ? Map.of(day, groupedSchedules.get(day)) : groupedSchedules;
+
+        model.addAttribute("uniqueDays", uniqueDays);
+        model.addAttribute("groupedSchedules", filteredSchedules);
+
+        return "hallShedules";
     }
 }

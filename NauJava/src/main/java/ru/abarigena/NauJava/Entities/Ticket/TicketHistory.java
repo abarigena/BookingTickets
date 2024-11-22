@@ -6,6 +6,9 @@ import ru.abarigena.NauJava.Entities.User.User;
 
 import java.time.LocalDateTime;
 
+/**
+ * Сохраняет историю изменений билета, включая пользователя, расписание и статус.
+ */
 @Entity
 @Table(name = "ticketHistory")
 public class TicketHistory {
@@ -30,6 +33,10 @@ public class TicketHistory {
 
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime date;
+
+    /**
+     *Геттеры и сеттеры для каждого поля
+     **/
 
     public void setId(Long id) {
         this.id = id;

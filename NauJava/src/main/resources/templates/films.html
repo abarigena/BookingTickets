@@ -5,12 +5,12 @@
 </head>
 <body>
 <h1>Films</h1>
-<a href="/films/create"><button>Add Film</button></a>
+<a href="/admin/films/create"><button>Add Film</button></a>
 <div>
     <h2>Existing Films</h2>
     <ul>
         <li th:each="film : ${films}">
-            <a th:href="@{/films/edit/{id}(id=${film.id})}">
+            <a th:href="@{/admin/films/edit/{id}(id=${film.id})}">
                 <button th:text="${film.title}"></button>
             </a>
         </li>

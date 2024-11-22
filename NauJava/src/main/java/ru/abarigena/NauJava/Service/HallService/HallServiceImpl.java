@@ -30,6 +30,11 @@ public class HallServiceImpl implements HallService {
         this.transactionManager = transactionManager;
     }
 
+    /**
+     * Удаляет зал и связанные с ним ряды.
+     *
+     * @param id ID зала
+     */
     @Override
     public void deleteHall(Long id)
     {
@@ -52,8 +57,10 @@ public class HallServiceImpl implements HallService {
     }
 
     /**
-     * @param id
-     * @return
+     * Находит зал по его ID.
+     *
+     * @param id ID зала
+     * @return объект {@link Hall}
      */
     @Override
     public Hall findHallById(Long id) {
@@ -61,7 +68,9 @@ public class HallServiceImpl implements HallService {
     }
 
     /**
-     * @return
+     * Возвращает список всех залов.
+     *
+     * @return список объектов {@link Hall}
      */
     @Override
     public List<Hall> findAllHalls() {
@@ -69,9 +78,11 @@ public class HallServiceImpl implements HallService {
     }
 
     /**
-     * @param name
-     * @param active
-     * @return
+     * Создает новый зал.
+     *
+     * @param name   название зала
+     * @param active статус активности
+     * @return созданный объект {@link Hall}
      */
     @Override
     public Hall createHall(String name, boolean active) {
@@ -82,10 +93,12 @@ public class HallServiceImpl implements HallService {
     }
 
     /**
-     * @param id
-     * @param name
-     * @param active
-     * @return
+     * Обновляет данные зала.
+     *
+     * @param id     ID зала
+     * @param name   новое название
+     * @param active новый статус активности
+     * @return обновленный объект {@link Hall}
      */
     @Override
     public Hall updateHall(Long id, String name, boolean active) {

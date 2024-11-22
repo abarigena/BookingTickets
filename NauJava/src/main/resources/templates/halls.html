@@ -60,7 +60,7 @@
     <h2>Управление залами</h2>
 
     <!-- Кнопка для создания нового зала -->
-    <a href="/halls/create" class="create-button">Создать зал</a>
+    <a href="/admin/halls/create" class="create-button">Создать зал</a>
 
     <h3>Существующие залы</h3>
     <div class="hall-columns">
@@ -68,7 +68,7 @@
         <div th:each="column : ${#numbers.sequence(0, halls.size() / 5)}" class="hall-column">
             <div th:each="hall, iterStat : ${halls}">
                 <div th:if="${iterStat.index >= column * 5 && iterStat.index < (column + 1) * 5}">
-                    <a th:href="@{/halls/edit/{id}(id=${hall.id})}" class="hall-button" th:text="'Зал ' + ${hall.name}"></a>
+                    <a th:href="@{/admin/halls/edit/{id}(id=${hall.id})}" class="hall-button" th:text="'Зал ' + ${hall.name}"></a>
                 </div>
             </div>
         </div>

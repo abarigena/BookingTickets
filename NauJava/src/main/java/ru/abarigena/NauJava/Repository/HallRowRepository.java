@@ -10,6 +10,9 @@ import ru.abarigena.NauJava.Entities.HallRow;
 
 import java.util.List;
 
+/**
+ * Репозиторий для управления объектами {@link HallRow}.
+ */
 @RepositoryRestResource
 public interface HallRowRepository extends CrudRepository<HallRow, Long> {
 
@@ -31,16 +34,38 @@ public interface HallRowRepository extends CrudRepository<HallRow, Long> {
      */
     HallRow findByRowAndHall(long row, Hall hall);
 
+    /**
+     * Удаляет все ряды, связанные с указанным залом.
+     *
+     * @param hall объект зала
+     */
     @Modifying
     @Query("DELETE FROM HallRow hr WHERE hr.hall = :hall")
     void deleteByHall(@Param("hall") Hall hall);
 
+    /**
+     * Находит ряды в зале по ID зала.
+     *
+     * @param hallId ID зала
+     * @return список рядов
+     */
     @Query("SELECT hr FROM HallRow hr WHERE hr.hall.id = :hallId")
     List<HallRow> findHallRowsByHallId(@Param("hallId") Long hallId);
 
+    /**
+     * Находит максимальный номер ряда в зале.
+     *
+     * @param hall объект зала
+     * @return максимальный номер ряда
+     */
     @Query("SELECT MAX(h.row) FROM HallRow h WHERE h.hall = :hall")
     Integer findMaxRowByHall(Hall hall);
 
-    // Получить все ряды в зале, отсортированные по номеру ряда
+    /**
+     * Находит все ряды в зале, отсортированные по номеру.
+     *
+     * @param hall объект зала
+     * @return список рядов
+     */
     List<HallRow> findByHallOrderByRow(Hall hall);
 }

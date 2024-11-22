@@ -37,8 +37,10 @@ public class TicketHistoryServiceImpl implements TicketHistoryService {
     }
 
     /**
-     * @param ticketId
-     * @param status
+     * Обновляет статус билета в истории.
+     *
+     * @param ticketId ID билета
+     * @param status   новый статус
      */
     @Override
     public void addTicketHistoryStatus(Long ticketId, TicketStatus status) {

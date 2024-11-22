@@ -20,8 +20,10 @@ public class FilmServiceImpl implements FilmService{
     }
 
     /**
-     * @param id
-     * @return
+     * Находит фильм по его ID.
+     *
+     * @param id ID фильма
+     * @return объект {@link Film}
      */
     @Override
     public Film findFimById(Long id) {
@@ -29,7 +31,9 @@ public class FilmServiceImpl implements FilmService{
     }
 
     /**
-     * @return
+     * Возвращает список всех фильмов.
+     *
+     * @return список фильмов
      */
     @Override
     public List<Film> findAllFilms() {
@@ -37,12 +41,14 @@ public class FilmServiceImpl implements FilmService{
     }
 
     /**
-     * @param title
-     * @param minAge
-     * @param duration
-     * @param description
-     * @param imageURL
-     * @return
+     * Создает новый фильм с указанными параметрами.
+     *
+     * @param title       название фильма
+     * @param minAge      минимальный возраст
+     * @param duration    длительность
+     * @param description описание
+     * @param imageURL    URL изображения
+     * @return созданный объект {@link Film}
      */
     @Override
     public Film createFilm(String title, int minAge, int duration, String description, String imageURL) {
@@ -58,13 +64,15 @@ public class FilmServiceImpl implements FilmService{
     }
 
     /**
-     * @param id
-     * @param title
-     * @param minAge
-     * @param duration
-     * @param description
-     * @param imageURL
-     * @return
+     * Обновляет данные фильма с указанным ID.
+     *
+     * @param id          ID фильма
+     * @param title       название
+     * @param minAge      минимальный возраст
+     * @param duration    длительность
+     * @param description описание
+     * @param imageURL    URL изображения
+     * @return обновленный объект {@link Film}
      */
     @Override
     public Film updateFilm(Long id, String title, int minAge, int duration, String description, String imageURL) {
@@ -80,7 +88,9 @@ public class FilmServiceImpl implements FilmService{
     }
 
     /**
-     * @param id
+     * Удаляет фильм по его ID.
+     *
+     * @param id ID фильма
      */
     @Override
     public void deleteFilm(Long id) {

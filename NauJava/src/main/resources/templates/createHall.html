@@ -57,7 +57,7 @@
 </head>
 <body>
 <h2>Создать новый зал</h2>
-<form action="#" th:action="@{/halls/create}" th:object="${hall}" method="post">
+<form action="#" th:action="@{/admin/halls/create}" th:object="${hall}" method="post">
     <label for="name">Название зала:</label>
     <input type="text" id="name" th:field="*{name}" required="true" />
 
@@ -67,6 +67,6 @@
     <button type="submit">Создать зал</button>
 </form>
 
-<a href="/halls" class="back-link">Назад</a>
+<a href="/admin/halls" class="back-link">Назад</a>
 </body>
 </html>

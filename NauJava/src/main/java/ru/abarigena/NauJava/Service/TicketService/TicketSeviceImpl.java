@@ -20,7 +20,10 @@ public class TicketSeviceImpl implements TicketService {
     }
 
     /**
-     * @param ticket
+     * Добавляет новый билет.
+     *
+     * @param ticket объект {@link Ticket}
+     * @return сохраненный объект {@link Ticket}
      */
     @Override
     public Ticket addTicket(Ticket ticket) {
@@ -31,7 +34,10 @@ public class TicketSeviceImpl implements TicketService {
     }
 
     /**
-     * @param ticketId
+     * Удаляет билет и обновляет его статус в истории.
+     *
+     * @param ticketId ID билета
+     * @return удаленный объект {@link Ticket}
      */
     @Override
     public Ticket deleteTicket(Long ticketId) {

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import ru.abarigena.NauJava.Entities.HallShedule;
 import ru.abarigena.NauJava.Entities.User.User;
 
+/**
+ * Представляет билет, приобретенный пользователем на определенное место в расписании зала.
+ */
 @Entity
 @Table(name = "tickets")
 public class Ticket {
@@ -23,6 +26,10 @@ public class Ticket {
 
     @ManyToOne
     private HallShedule hallShedule;
+
+    /**
+    *Геттеры и сеттеры для каждого поля
+     **/
 
     public Long getId() {
         return id;

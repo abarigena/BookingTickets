@@ -9,7 +9,7 @@ import ru.abarigena.NauJava.Service.HallRowService.HallRowService;
 import ru.abarigena.NauJava.Service.HallService.HallService;
 
 @Controller
-@RequestMapping("/hallRows")
+@RequestMapping("/admin/hallRows")
 public class HallRowController {
 
     private final HallRowService hallRowService;
@@ -25,7 +25,7 @@ public class HallRowController {
     public String createRow(@RequestParam Long hallId, @RequestParam int seatCount) {
         Hall hall = hallService.findHallById(hallId);
         hallRowService.createRow(hall, seatCount);
-        return "redirect:/halls/edit/" + hallId;  // Перенаправление на страницу редактирования зала
+        return "redirect:/admin/halls/edit/" + hallId;  // Перенаправление на страницу редактирования зала
     }
 
     // Обработка удаления ряда
@@ -33,13 +33,13 @@ public class HallRowController {
     public String deleteRow(@PathVariable("id") Long id, @RequestParam Long hallId) {
         HallRow hallRow = hallRowService.findRowById(id);
         hallRowService.deleteRow(hallRow);
-        return "redirect:/halls/edit/" + hallId;  // Перенаправление на страницу редактирования зала
+        return "redirect:/admin/halls/edit/" + hallId;  // Перенаправление на страницу редактирования зала
     }
 
     @PostMapping("/update/{id}")
     public String updateRow(@PathVariable("id") Long id, @RequestParam int seatCount, @RequestParam Long hallId) {
         hallRowService.updateRow(id, seatCount); // Вызов метода из сервиса
-        return "redirect:/halls/edit/" + hallId; // Перенаправление на страницу редактирования зала
+        return "redirect:/admin/halls/edit/" + hallId; // Перенаправление на страницу редактирования зала
     }
 
 }

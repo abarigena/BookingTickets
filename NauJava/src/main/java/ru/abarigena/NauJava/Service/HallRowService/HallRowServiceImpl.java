@@ -18,8 +18,10 @@ public class HallRowServiceImpl implements HallRowService {
         this.hallRowRepository = hallRowRepository;
     }
     /**
-     * @param hallId
-     * @return
+     * Находит все ряды в зале по его ID.
+     *
+     * @param hallId ID зала
+     * @return список рядов
      */
     @Override
     public List<HallRow> getRowsByHallId(Long hallId) {
@@ -27,9 +29,11 @@ public class HallRowServiceImpl implements HallRowService {
     }
 
     /**
-     * @param hall
-     * @param seatCount
-     * @return
+     * Создает новый ряд в указанном зале с заданным количеством мест.
+     *
+     * @param hall      объект зала
+     * @param seatCount количество мест
+     * @return созданный объект {@link HallRow}
      */
     @Override
     public HallRow createRow(Hall hall, int seatCount) {
@@ -48,7 +52,9 @@ public class HallRowServiceImpl implements HallRowService {
     }
 
     /**
-     * @param hallRow
+     * Удаляет указанный ряд и перенумеровывает остальные.
+     *
+     * @param hallRow объект ряда
      */
     @Override
     public void deleteRow(HallRow hallRow) {
@@ -65,9 +71,11 @@ public class HallRowServiceImpl implements HallRowService {
     }
 
     /**
-     * @param id
-     * @param seatCount
-     * @return
+     * Обновляет количество мест в ряду с указанным ID.
+     *
+     * @param id        ID ряда
+     * @param seatCount новое количество мест
+     * @return обновленный объект {@link HallRow}
      */
     @Override
     public HallRow updateRow(Long id, int seatCount) {
@@ -82,8 +90,10 @@ public class HallRowServiceImpl implements HallRowService {
     }
 
     /**
-     * @param id
-     * @return
+     * Находит ряд по его ID.
+     *
+     * @param id ID ряда
+     * @return объект {@link HallRow}
      */
     @Override
     public HallRow findRowById(Long id) {
