@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.abarigena.NauJava.Entities.User.User;
 import ru.abarigena.NauJava.Service.UserService.UserService;
+
+import java.security.Principal;
 
 /**
  * Контроллер для обработки запросов, связанных с регистрацией пользователей.
@@ -89,5 +92,23 @@ public class UserController {
             model.addAttribute("message", "Invalid or expired token!");
             return "error";
         }
+    }
+
+    // Метод для отображения страницы профиля
+    @GetMapping("/profile")
+    public String showProfile(Model model, Principal principal) {
+        String username = principal.getName(); // Получаем текущего пользователя
+        User user = userService.findByUsername(username); // Загружаем данные пользователя
+        model.addAttribute("user", user);
+        return "profile"; // Возвращаем шаблон profile.html
+    }
+
+    @PostMapping("/profile")
+    public String updateProfile(@ModelAttribute("user") User updatedUser, Principal principal) {
+        String username = principal.getName();
+
+        userService.updateUser(username,updatedUser.getFirstName(),updatedUser.getLastName(),
+                updatedUser.getAge(),updatedUser.getPhoneNumber());
+        return "redirect:/profile";
     }
 }

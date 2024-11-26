@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+<h1>User Profile</h1>
+<form th:action="@{/profile}" method="post">
+    <!-- Поле для имени -->
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" required>
+    <br>
+
+    <!-- Поле для фамилии -->
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" th:value="${user.lastName}" required>
+    <br>
+
+    <!-- Поле для возраста -->
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" th:value="${user.age}" required>
+    <br>
+
+    <!-- Поле для телефона -->
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.phoneNumber}" required>
+    <br>
+
+    <!-- Поле только для чтения (username) -->
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" th:value="${user.username}" readonly>
+    <br>
+
+    <!-- Кнопка сохранить -->
+    <button type="submit">Сохранить</button>
+</form>
+<a href="/forgotPassword"><button>Изменить пароль</button></a>
+<a href="/logout"><button>выйти из аккаунта</button></a>
+</body>
+</html>
