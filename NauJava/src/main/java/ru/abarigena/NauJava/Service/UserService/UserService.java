@@ -27,4 +27,6 @@ public interface UserService {
     void initiatePasswordReset(String email);
 
     boolean resetPassword(String token, String newPassword);
+
+    User updateUser(String username, String firstName, String lastname, int age, String phoneNumber);
 }

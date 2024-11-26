@@ -27,6 +27,15 @@ public class Ticket {
     @ManyToOne
     private HallShedule hallShedule;
 
+    public Ticket(){
+
+    }
+
+    public Ticket(int row, int seat){
+        this.row = row;
+        this.seat = seat;
+    }
+
     /**
     *Геттеры и сеттеры для каждого поля
      **/

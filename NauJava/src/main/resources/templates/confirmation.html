@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Confirmation</title>
+</head>
+<body>
+<h1>Thank you for your booking!</h1>
+<h2>Your tickets:</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Row</th>
+        <th>Seat</th>
+        <th>Film</th>
+        <th>Hall</th>
+        <th>Showtime</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="ticket : ${tickets}">
+        <tr>
+            <td th:text="${ticket.row}"></td>
+            <td th:text="${ticket.seat}"></td>
+            <td th:text="${ticket.hallShedule.film.title}"></td>
+            <td th:text="${ticket.hallShedule.hall.name}"></td>
+            <td th:text="${ticket.hallShedule.startTime}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+</body>
+</html>

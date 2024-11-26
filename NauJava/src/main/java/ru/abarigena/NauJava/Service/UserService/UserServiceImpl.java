@@ -99,6 +99,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return false;
     }
 
+    /**
+     * @param username
+     * @param firstName
+     * @param lastname
+     * @param age
+     * @param phoneNumber
+     * @return
+     */
+    @Override
+    public User updateUser(String username, String firstName, String lastname, int age, String phoneNumber) {
+        User user = userRepository.findByUsername(username);
+
+        user.setFirstName(firstName);
+        user.setLastName(lastname);
+        user.setAge(age);
+        user.setPhoneNumber(phoneNumber);
+
+        userRepository.save(user);
+        return user;
+    }
+
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

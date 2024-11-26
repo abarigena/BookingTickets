@@ -24,7 +24,7 @@ public interface HallSheduleRepository extends CrudRepository<HallShedule, Long>
     @Query("select hs from HallShedule hs " +
         "join fetch hs.film f "+
         "join fetch hs.hall h " +
-        "where hs.startTime >= :startDate "+
+        "where hs.startTime >= :startDate and h.active = true  "+
         "order by DATE(hs.startTime), f.title, h.name")
     List<HallShedule> findShedulesGroupedByDayFilmAndHall(@Param("startDate") LocalDateTime startDate);
 

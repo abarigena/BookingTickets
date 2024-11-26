@@ -99,4 +99,13 @@ public class HallRowServiceImpl implements HallRowService {
     public HallRow findRowById(Long id) {
         return hallRowRepository.findById(id).orElseThrow(() -> new RuntimeException("HallRow not found"));
     }
+
+    /**
+     * @param hall
+     * @return
+     */
+    @Override
+    public List<HallRow> findRowByHall(Hall hall) {
+        return hallRowRepository.findByHallOrderByRow(hall);
+    }
 }

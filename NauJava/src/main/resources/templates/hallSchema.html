@@ -17,27 +17,39 @@
 <h2 th:text="'Film: ' + ${schedule.film.title}"></h2>
 <h3 th:text="'Start Time: ' + ${schedule.startTime}"></h3>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>Row</th>
-        <th>Seats</th>
-    </tr>
-    </thead>
-    <tbody>
-    <th:block th:each="row : ${hallRows}">
+<form th:action="@{/bookTicket/pickPlace/{scheduleId}(scheduleId=${schedule.id})}" method="post">
+    <input type="hidden" th:value="${schedule.id}" name="scheduleId"/>
+    <table border="1">
+        <thead>
         <tr>
-            <td th:text="'Row ' + ${row.row}"></td>
-            <td>
-                <th:block th:each="seat : ${#numbers.sequence(1, row.seatCount)}">
-                        <span th:text="${seat}"
-                              th:classappend="${bookedSeats[row.row]?.contains(seat)} ? 'occupied-seat' : 'free-seat'"></span>&nbsp;
-                </th:block>
-            </td>
+            <th>Row</th>
+            <th>Seats</th>
         </tr>
-    </th:block>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        <th:block th:each="row : ${hallRows}">
+            <tr>
+                <td th:text="'Row ' + ${row.row}"></td>
+                <td>
+                    <th:block th:each="seat : ${#numbers.sequence(1, row.seatCount)}">
+                        <label>
+                            <input type="checkbox"
+                                   th:disabled="${bookedSeats[row.row]?.contains(seat)}"
+                                   th:checked="${bookedSeats[row.row]?.contains(seat)}"
+                                   th:value="${row.row + '-' + seat}"
+                                   name="selectedSeats"/>
+                            <span th:text="${seat}"
+                                  th:classappend="${bookedSeats[row.row]?.contains(seat)} ? 'occupied-seat' : 'free-seat'"></span>
+                        </label>&nbsp;
+                    </th:block>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+    <button type="submit">Confirm Selection</button>
+</form>
+
 
 </body>
 </html>

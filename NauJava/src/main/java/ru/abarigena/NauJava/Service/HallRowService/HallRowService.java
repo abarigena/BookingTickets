@@ -16,4 +16,6 @@ public interface HallRowService {
     HallRow updateRow(Long id, int seatCount);
 
     HallRow findRowById(Long id);
+
+    List<HallRow> findRowByHall(Hall hall);
 }
