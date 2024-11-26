@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hall Schema</title>
+</head>
+<style>
+    .occupied-seat {
+        color: red;
+        font-weight: bold;
+    }
+    .free-seat {
+        color: green;
+    }
+</style>
+<body>
+<h1 th:text="'Hall Schema for ' + ${schedule.hall.name}"></h1>
+<h2 th:text="'Film: ' + ${schedule.film.title}"></h2>
+<h3 th:text="'Start Time: ' + ${schedule.startTime}"></h3>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Row</th>
+        <th>Seats</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="row : ${hallRows}">
+        <tr>
+            <td th:text="'Row ' + ${row.row}"></td>
+            <td>
+                <th:block th:each="seat : ${#numbers.sequence(1, row.seatCount)}">
+                        <span th:text="${seat}"
+                              th:classappend="${bookedSeats[row.row]?.contains(seat)} ? 'occupied-seat' : 'free-seat'"></span>&nbsp;
+                </th:block>
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+</body>
+</html>
