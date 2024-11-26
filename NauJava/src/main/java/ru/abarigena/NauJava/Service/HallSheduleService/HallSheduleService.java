@@ -32,4 +32,6 @@ public interface HallSheduleService {
     Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getGroupedSchedules();
 
     Map<Long, List<LocalTime>> getSchedules();
+
+    Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getUpcomingSchedules();
 }

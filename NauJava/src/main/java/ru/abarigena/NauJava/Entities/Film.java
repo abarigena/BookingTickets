@@ -1,6 +1,7 @@
 package ru.abarigena.NauJava.Entities;
 
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Представляет фильм с информацией о названии, возрастном ограничении, длительности, описании и ссылке на изображение.
@@ -27,9 +28,20 @@ public class Film {
     @Column
     private String imageUrl;
 
+    @Transient
+    private MultipartFile image;
+
     /**
      *Геттеры и сеттеры для каждого поля
      **/
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
 
     public String getTitle() {
         return title;

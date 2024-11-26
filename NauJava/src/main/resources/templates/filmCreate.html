@@ -5,7 +5,8 @@
 </head>
 <body>
 <h1>Create a New Film</h1>
-<form th:action="@{/admin/films/create}" th:object="${film}" method="post">
+<!-- Указываем enctype="multipart/form-data" для загрузки файлов -->
+<form th:action="@{/admin/films/create}" th:object="${film}" method="post" enctype="multipart/form-data">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" th:field="*{title}" required/><br/>
 
@@ -18,8 +19,9 @@
     <label for="description">Description:</label>
     <textarea id="description" name="description" th:field="*{description}"></textarea><br/>
 
-    <label for="imageUrl">Image URL:</label>
-    <input type="text" id="imageUrl" name="imageUrl" th:field="*{imageUrl}"/><br/>
+    <!-- Убираем поле для ввода URL и добавляем поле для загрузки файла -->
+    <label for="image">Image:</label>
+    <input type="file" id="image" name="image"/><br/>
 
     <button type="submit">Create Film</button>
 </form>

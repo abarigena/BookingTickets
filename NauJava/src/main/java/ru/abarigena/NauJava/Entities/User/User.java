@@ -30,6 +30,15 @@ public class User {
 
     @Column
     private String phoneNumber;
+    
+    @Column(unique = true)
+    private String email;
+
+    @Column
+    private boolean emailVerified = false;
+
+    @Column
+    private String verificationToken;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
@@ -47,6 +56,31 @@ public class User {
     /**
      * Геттер и сеттер для каждого поля
      */
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
     public Set<UserRole> getUserRole() {
         return userRole;
     }

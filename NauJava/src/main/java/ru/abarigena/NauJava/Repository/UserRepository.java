@@ -25,4 +25,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
      */
     @Query("select count(u) from User u join u.userRole r where r = :userRole")
     Long countByUserRoles(UserRole userRole);
+
+    User findByVerificationToken(String token);
+
+    User findByEmail(String email);
 }

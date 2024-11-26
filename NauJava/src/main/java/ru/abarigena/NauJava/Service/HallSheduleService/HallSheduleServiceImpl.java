@@ -180,4 +180,26 @@ public class HallSheduleServiceImpl implements HallSheduleService {
                         )
                 ));
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getUpcomingSchedules() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime weekAhead = today.plusDays(7);
+
+        List<HallShedule> schedules = hallSheduleRepository.findShedulesGroupedByDayFilmAndHall(today);
+
+        return schedules.stream()
+                .filter(schedule -> !schedule.getStartTime().isAfter(weekAhead)) // Ограничение на 7 дней
+                .collect(Collectors.groupingBy(
+                        schedule -> schedule.getStartTime().toLocalDate(), // Группировка по дате
+                        Collectors.groupingBy(
+                                HallShedule::getFilm, // Вложенная группировка по фильму
+                                Collectors.groupingBy(HallShedule::getHall) // Ещё одна вложенная группировка по залу
+                        )
+                ));
+    }
+
 }
