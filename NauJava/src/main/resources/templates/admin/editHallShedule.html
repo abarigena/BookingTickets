@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Edit Hall Schedule</title>
+    <title>Редактирование расписания</title>
 </head>
 <body>
-<h1>Edit Hall Schedule</h1>
+<h1>Редактирование расписания</h1>
 <form th:action="@{/admin/hallShedules/edit/{id}(id=${hallShedule.id})}" th:object="${hallShedule}" method="post">
 
     <!-- Поле выбора фильма -->

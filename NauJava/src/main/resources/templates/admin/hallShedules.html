@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Upcoming Schedules</title>
+    <title>Расписание залов</title>
 </head>
 <body>
-<h1>Upcoming Schedules</h1>
-<a href="/profile"><button>профиль</button></a>
-
-<label for="select-day">Select Day:</label>
+<h1>Расписание залов</h1>
+<label for="select-day">Выберите день:</label>
 <select id="select-day" onchange="location = this.value;">
     <option disabled selected>-- Select Day --</option>
     <th:block th:each="day : ${uniqueDays}">
-        <option th:value="@{'/bookTicket?day=' + ${day}}" th:text="${day}"></option>
+        <option th:value="@{'/admin/hallShedules?day=' + ${day}}" th:text="${day}"></option>
     </th:block>
 </select>
+<a href="/admin/hallShedules/create" class="create-button">Создать расписание</a>
 
 <div th:if="${groupedSchedules}">
     <th:block th:each="entry : ${groupedSchedules}">
@@ -21,18 +20,13 @@
             <h2 th:text="'Day: ' + ${entry.key}"></h2>
             <th:block th:each="filmEntry : ${entry.value}">
                 <div>
-                    <!-- Отображаем название фильма -->
                     <h3 th:text="'Film: ' + ${filmEntry.key.title}"></h3>
-
-                    <!-- Отображаем картинку фильма, если она есть -->
-                    <img th:src="${filmEntry.key.imageUrl}" alt="Film Image" width="200" height="300" />
-
                     <th:block th:each="hallEntry : ${filmEntry.value}">
                         <div>
                             <h4 th:text="'Hall: ' + ${hallEntry.key.name}"></h4>
                             <p>
                                 <th:block th:each="schedule : ${hallEntry.value}">
-                                    <a th:href="@{'/bookTicket/pickPlace/' + ${schedule.id}}"
+                                    <a th:href="@{'/admin/hallShedules/edit/' + ${schedule.id}}"
                                        th:text="${schedule.startTime.toLocalTime()}"></a>&nbsp;
                                 </th:block>
                             </p>
@@ -43,6 +37,5 @@
         </div>
     </th:block>
 </div>
-
 </body>
 </html>

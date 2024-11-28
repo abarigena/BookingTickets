@@ -12,9 +12,6 @@ import ru.abarigena.NauJava.Entities.HallRow;
 import ru.abarigena.NauJava.Entities.HallShedule;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
 import ru.abarigena.NauJava.Entities.User.User;
-import ru.abarigena.NauJava.Repository.HallRowRepository;
-import ru.abarigena.NauJava.Repository.HallSheduleRepository;
-import ru.abarigena.NauJava.Repository.TicketRepository;
 import ru.abarigena.NauJava.Service.HallRowService.HallRowService;
 import ru.abarigena.NauJava.Service.HallSheduleService.HallSheduleService;
 import ru.abarigena.NauJava.Service.TicketService.TicketService;
@@ -26,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер для работы с расписанием залов и бронированием билетов для пользователей.
+ */
 @Controller
 @RequestMapping("/bookTicket")
 public class HallScheduleControllerUser {
@@ -43,6 +43,13 @@ public class HallScheduleControllerUser {
         this.userService = userService;
     }
 
+    /**
+     * Получение списка ближайших расписаний (7 дней).
+     *
+     * @param day   выбранный день (необязательный параметр)
+     * @param model объект модели
+     * @return путь к шаблону с расписаниями
+     */
     @GetMapping
     public String getSchedules(@RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
                                Model model) {
@@ -64,9 +71,16 @@ public class HallScheduleControllerUser {
         model.addAttribute("uniqueDays", validDays);
         model.addAttribute("groupedSchedules", filteredSchedules);
 
-        return "upcomingSchedules";
+        return "userView/upcomingSchedules";
     }
 
+    /**
+     * Получение схемы зала с информацией о занятых местах.
+     *
+     * @param scheduleId идентификатор расписания
+     * @param model      объект модели
+     * @return путь к шаблону со схемой зала
+     */
     @GetMapping("/pickPlace/{scheduleId}")
     public String getHallSchema(@PathVariable Long scheduleId, Model model) {
         // Получаем расписание
@@ -75,31 +89,30 @@ public class HallScheduleControllerUser {
         // Получаем все ряды в зале
         List<HallRow> hallRows = hallRowService.findRowByHall(schedule.getHall());
 
-        // Получаем занятые места по расписанию
-        List<Ticket> bookedTickets = ticketService.findByHallShedule(schedule);
-
         // Формируем карту занятых мест (ключ: ряд, значение: список занятых мест)
-        Map<Integer, List<Integer>> bookedSeats = bookedTickets.stream()
-                .collect(Collectors.groupingBy(
-                        Ticket::getRow,
-                        Collectors.mapping(Ticket::getSeat, Collectors.toList())
-                ));
+        Map<Integer, List<Integer>> bookedSeats = ticketService.getBookedSeats(schedule);
 
-        // Передаем данные в шаблон
         model.addAttribute("schedule", schedule);
         model.addAttribute("hallRows", hallRows);
         model.addAttribute("bookedSeats", bookedSeats);
 
-        return "hallSchema";
+        return "userView/hallSchema";
     }
 
+    /**
+     * Подтверждение выбранных мест.
+     *
+     * @param scheduleId       идентификатор расписания
+     * @param selectedSeats    список выбранных мест (формат "ряд-место")
+     * @param principal        объект с данными текущего пользователя
+     * @param redirectAttributes объект для передачи данных при перенаправлении
+     * @return перенаправление на страницу подтверждения или выбора мест при ошибке
+     */
     @PostMapping("/pickPlace/{scheduleId}")
     public String confirmSeats(@PathVariable Long scheduleId,
                                @RequestParam List<String> selectedSeats, // получаем строки с выбранными местами
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
-        // Выводим полученные данные
-        System.out.println("Selected seats: " + selectedSeats);
 
         HallShedule schedule = hallSheduleService.findHallSheduleById(scheduleId);
         String username = principal.getName();
@@ -126,15 +139,21 @@ public class HallScheduleControllerUser {
 
             redirectAttributes.addFlashAttribute("tickets", tickets);
         } catch (IllegalStateException e) {
-            return "redirect:/bookTicket/pickPlace/" + scheduleId ; // Ошибка при подтверждении
+            return "redirect:/bookTicket/pickPlace/" + scheduleId ;
         }
 
-        return "redirect:/bookTicket/confirmation"; // Перенаправление после успешного подтверждения
+        return "redirect:/bookTicket/confirmation";
     }
 
+    /**
+     * Отображение страницы подтверждения.
+     *
+     * @param model объект модели
+     * @return путь к шаблону подтверждения
+     */
     @GetMapping("/confirmation")
     public String showConfirmationPage(Model model) {
-        return "confirmation";
+        return "userView/confirmation";
     }
 
 }

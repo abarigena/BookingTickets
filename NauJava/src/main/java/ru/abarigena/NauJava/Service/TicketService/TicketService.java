@@ -9,11 +9,13 @@ import java.util.Map;
 public interface TicketService {
     Ticket addTicket(Ticket ticket);
 
-    Ticket deleteTicket(Long ticketId);
+    Ticket cancelBookTicket(Long ticketId);
 
     List<Ticket> findByHallShedule(HallShedule hallShedule);
 
     void confirmSeats(HallShedule shedule, List<Ticket> tickets, String email);
 
     Map<Integer, List<Integer>> getBookedSeats(HallShedule schedule);
+
+    List<Ticket> getActiveTicketsByUserId(Long userId);
 }

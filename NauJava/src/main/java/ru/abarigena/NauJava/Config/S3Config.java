@@ -7,8 +7,10 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.regions.Regions;
 
+/**
+ * Конфигурация для работы с S3-совместимым хранилищем (Yandex Object Storage).
+ */
 @Configuration
 public class S3Config {
 
@@ -21,6 +23,11 @@ public class S3Config {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
+    /**
+     * Создание и настройка клиента Amazon S3.
+     *
+     * @return экземпляр AmazonS3 для взаимодействия с хранилищем
+     */
     @Bean
     public AmazonS3 amazonS3() {
         BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);

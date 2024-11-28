@@ -26,7 +26,19 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query("select count(u) from User u join u.userRole r where r = :userRole")
     Long countByUserRoles(UserRole userRole);
 
+    /**
+     * Находит пользователя по токену верификации.
+     *
+     * @param token токен верификации
+     * @return объект {@link User}, соответствующий токену
+     */
     User findByVerificationToken(String token);
 
+    /**
+     * Находит пользователя по адресу электронной почты.
+     *
+     * @param email адрес электронной почты
+     * @return объект {@link User}, соответствующий email
+     */
     User findByEmail(String email);
 }

@@ -13,6 +13,6 @@ public class LogoutController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
         logoutHandler.logout(request, response, null);
-        return "redirect:/login"; // Перенаправление на страницу логина
+        return "redirect:/login";
     }
 }

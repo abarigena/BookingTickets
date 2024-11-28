@@ -26,6 +26,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Показать страницу регистрации нового пользователя.
+     *
+     * @return путь к шаблону страницы регистрации
+     */
     @GetMapping("/registration")
     public String getRegistration(){
         return "registration";
@@ -52,6 +57,13 @@ public class UserController {
         }
     }
 
+    /**
+     * Подтверждение email-адреса пользователя с использованием токена.
+     *
+     * @param token Токен подтверждения, передаваемый через URL
+     * @param model Модель для передачи данных в представление
+     * @return путь к шаблону с подтверждением или ошибкой
+     */
     @GetMapping("/verify")
     public String verifyEmail(@RequestParam("token") String token, Model model){
         if(userService.verifyEmail(token)){
@@ -63,24 +75,50 @@ public class UserController {
         }
     }
 
+    /**
+     * Отображение формы для ввода email для восстановления пароля.
+     *
+     * @return путь к шаблону страницы восстановления пароля
+     */
     @GetMapping("/forgotPassword")
     public String showForgotPasswordForm() {
         return "forgotPassword";
     }
 
+    /**
+     * Обработка запроса на восстановление пароля по email.
+     *
+     * @param email Адрес электронной почты пользователя
+     * @param model Модель для передачи данных в представление
+     * @return путь к шаблону страницы входа
+     */
     @PostMapping("/forgotPassword")
     public String processForgotPassword(@RequestParam("email") String email, Model model) {
         userService.initiatePasswordReset(email);
         return "login";
     }
 
-
+    /**
+     * Показать форму для сброса пароля с использованием токена.
+     *
+     * @param token Токен для сброса пароля
+     * @param model Модель для передачи данных в представление
+     * @return путь к шаблону для сброса пароля
+     */
     @GetMapping("/resetPassword")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         model.addAttribute("token", token);
         return "resetPassword";
     }
 
+    /**
+     * Обработка сброса пароля с использованием токена и нового пароля.
+     *
+     * @param token Токен для сброса пароля
+     * @param newPassword Новый пароль пользователя
+     * @param model Модель для передачи данных в представление
+     * @return путь к шаблону входа или ошибке
+     */
     @PostMapping("/resetPassword")
     public String processResetPassword(@RequestParam("token") String token,
                                        @RequestParam("password") String newPassword,
@@ -94,15 +132,28 @@ public class UserController {
         }
     }
 
-    // Метод для отображения страницы профиля
+    /**
+     * Показать страницу профиля текущего пользователя.
+     *
+     * @param model     Модель для передачи данных в представление
+     * @param principal Объект для получения информации о текущем пользователе
+     * @return путь к шаблону профиля пользователя
+     */
     @GetMapping("/profile")
     public String showProfile(Model model, Principal principal) {
-        String username = principal.getName(); // Получаем текущего пользователя
-        User user = userService.findByUsername(username); // Загружаем данные пользователя
+        String username = principal.getName();
+        User user = userService.findByUsername(username);
         model.addAttribute("user", user);
-        return "profile"; // Возвращаем шаблон profile.html
+        return "userView/profile";
     }
 
+    /**
+     * Обновление данных профиля пользователя.
+     *
+     * @param updatedUser Обновленные данные пользователя
+     * @param principal   Объект для получения информации о текущем пользователе
+     * @return перенаправление на страницу профиля
+     */
     @PostMapping("/profile")
     public String updateProfile(@ModelAttribute("user") User updatedUser, Principal principal) {
         String username = principal.getName();
