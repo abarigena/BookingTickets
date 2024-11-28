@@ -15,6 +15,13 @@ public class EmailService {
         this.mailSender =mailSender;
     }
 
+    /**
+     * Отправляет email сообщение.
+     *
+     * @param to      адрес электронной почты получателя
+     * @param subject тема письма
+     * @param text    текст письма
+     */
     public void sendEmail(String to , String subject, String text){
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

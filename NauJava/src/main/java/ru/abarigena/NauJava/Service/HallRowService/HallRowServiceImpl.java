@@ -101,8 +101,10 @@ public class HallRowServiceImpl implements HallRowService {
     }
 
     /**
-     * @param hall
-     * @return
+     * Находит ряды зала, отсортированные по номеру.
+     *
+     * @param hall объект {@link Hall}, для которого нужно получить ряды
+     * @return список рядов зала, отсортированный по номеру
      */
     @Override
     public List<HallRow> findRowByHall(Hall hall) {

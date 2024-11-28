@@ -182,7 +182,9 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @return
+     * Возвращает расписание сеансов на ближайшие 7 дней, сгруппированное по дате, фильму и залу.
+     *
+     * @return карта расписания, где ключами являются даты, фильмы и залы, а значениями — списки сеансов
      */
     @Override
     public Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getUpcomingSchedules() {

@@ -35,6 +35,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         this.emailService = emailService;
     }
 
+    /**
+     * Добавляет нового пользователя, устанавливает роль, шифрует пароль,
+     * генерирует токен подтверждения и отправляет email для подтверждения регистрации.
+     *
+     * @param user новый пользователь
+     */
     @Override
     public void addUser(User user) {
         user.setUserRole(Collections.singleton(UserRole.USER));
@@ -51,14 +57,22 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 "Пройдите по ссылке для подтверждения: " + verificationLink);
     }
 
+    /**
+     * Ищет пользователя по имени.
+     *
+     * @param username имя пользователя
+     * @return найденный пользователь или null, если пользователь не найден
+     */
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     /**
-     * @param token
-     * @return
+     * Подтверждает email пользователя с помощью токена.
+     *
+     * @param token токен подтверждения
+     * @return true, если email подтвержден успешно, иначе false
      */
     @Override
     public boolean verifyEmail(String token) {
@@ -72,6 +86,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return false;
     }
 
+    /**
+     * Инициирует процесс восстановления пароля, генерирует токен сброса и отправляет email со ссылкой.
+     *
+     * @param email email пользователя
+     */
     @Override
     public void initiatePasswordReset(String email){
         User user = userRepository.findByEmail(email);
@@ -85,6 +104,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
     }
 
+    /**
+     * Сбрасывает пароль пользователя, используя токен сброса.
+     *
+     * @param token       токен сброса пароля
+     * @param newPassword новый пароль
+     * @return true, если пароль успешно сброшен, иначе false
+     */
     @Transactional
     @Override
     public boolean resetPassword(String token, String newPassword) {
@@ -100,12 +126,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     /**
-     * @param username
-     * @param firstName
-     * @param lastname
-     * @param age
-     * @param phoneNumber
-     * @return
+     * Обновляет информацию о пользователе.
+     *
+     * @param username    имя пользователя
+     * @param firstName   новое имя
+     * @param lastname    новая фамилия
+     * @param age         новый возраст
+     * @param phoneNumber новый номер телефона
+     * @return обновленный пользователь
      */
     @Override
     public User updateUser(String username, String firstName, String lastname, int age, String phoneNumber) {
@@ -120,6 +148,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return user;
     }
 
+    /**
+     * Загружает данные пользователя для аутентификации.
+     *
+     * @param username имя пользователя
+     * @return объект UserDetails для Spring Security
+     * @throws UsernameNotFoundException если пользователь не найден
+     */
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -129,6 +164,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return user;
     }
 
+    /**
+     * Преобразует роли пользователя в объекты GrantedAuthority для Spring Security.
+     *
+     * @param userRoles набор ролей пользователя
+     * @return коллекция GrantedAuthority
+     */
     private Collection<GrantedAuthority> mapRoles(Set<UserRole> userRoles) {
         return userRoles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())).
                 collect(Collectors.toList());

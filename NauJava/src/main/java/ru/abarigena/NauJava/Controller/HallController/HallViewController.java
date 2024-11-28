@@ -24,49 +24,81 @@ public class HallViewController {
         this.hallRowService = hallRowService;
     }
 
+    /**
+     * Отображение всех залов.
+     *
+     * @param model объект модели для передачи данных в шаблон
+     * @return путь к шаблону со списком залов
+     */
     @GetMapping
     public String getAllHalls(Model model) {
-        List<Hall> halls = hallService.findAllHalls(); // Получаем все залы
-        model.addAttribute("halls", halls); // Добавляем зал в модель для передачи в HTML страницу
-        return "halls"; // Отображаем страницу halls.html
+        List<Hall> halls = hallService.findAllHalls();
+        model.addAttribute("halls", halls);
+        return "admin/halls";
     }
 
+    /**
+     * Отображение формы создания нового зала.
+     *
+     * @param model объект модели
+     * @return путь к шаблону создания зала
+     */
     @GetMapping("/create")
     public String createHallForm(Model model) {
-        model.addAttribute("hall", new Hall());  // Пустой объект для создания нового зала
-        return "createHall";
+        model.addAttribute("hall", new Hall());
+        return "admin/createHall";
     }
 
-    // Страница для редактирования существующего зала
+    /**
+     * Отображение формы редактирования существующего зала.
+     *
+     * @param id    идентификатор зала
+     * @param model объект модели
+     * @return путь к шаблону редактирования зала
+     */
     @GetMapping("/edit/{id}")
     public String editHallForm(@PathVariable("id") Long id, Model model) {
         Hall hall = hallService.findHallById(id);
         List<HallRow> rows = hallRowService.getRowsByHallId(id);
         model.addAttribute("hall", hall);
         model.addAttribute("rows", rows);  // Существующие ряды для редактирования
-        return "editHall";
+        return "admin/editHall";
     }
 
-    // Обработка создания нового зала
+    /**
+     * Обработка создания нового зала.
+     *
+     * @param hall объект зала
+     * @return перенаправление на страницу редактирования созданного зала
+     */
     @PostMapping("/create")
     public String createHall(@ModelAttribute Hall hall) {
         Hall exist = hallService.createHall(hall.getName(), hall.isActive());
-        return "redirect:/admin/halls/edit/" + exist.getId();  // Перенаправление после создания
+        return "redirect:/admin/halls/edit/" + exist.getId();
     }
 
-    // Обработка обновления существующего зала
+    /**
+     * Обработка обновления существующего зала.
+     *
+     * @param id   идентификатор зала
+     * @param hall обновленные данные зала
+     * @return перенаправление на страницу со списком залов
+     */
     @PostMapping("/edit/{id}")
     public String updateHall(@PathVariable("id") Long id, @ModelAttribute Hall hall) {
         hallService.updateHall(id, hall.getName(), hall.isActive());
-        return "redirect:/admin/halls";  // Перенаправление после обновления
+        return "redirect:/admin/halls";
     }
 
+    /**
+     * Удаление зала.
+     *
+     * @param id идентификатор зала
+     * @return перенаправление на страницу со списком залов
+     */
     @PostMapping("/delete/{id}")
     public String deleteHall(@PathVariable Long id) {
         hallService.deleteHall(id);
         return "redirect:/admin/halls";  // Перенаправление на страницу со всеми залами после удаления
     }
-
-
-
 }

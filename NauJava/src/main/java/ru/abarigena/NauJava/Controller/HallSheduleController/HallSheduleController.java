@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Контроллер для управления расписанием залов.
+ */
 @Controller
 @RequestMapping("/admin/hallShedules")
 public class HallSheduleController {
@@ -31,14 +34,29 @@ public class HallSheduleController {
         this.hallService = hallService;
     }
 
+    /**
+     * Отображение формы для создания нового расписания.
+     *
+     * @param model объект модели
+     * @return путь к шаблону создания расписания
+     */
     @GetMapping("/create")
     public String createHallShedule(Model model) {
         model.addAttribute("hallShedule", new HallShedule());
         model.addAttribute("films", filmService.findAllFilms());
         model.addAttribute("halls", hallService.findAllHalls());
-        return "createHallShedule";
+        return "admin/createHallShedule";
     }
 
+    /**
+     * Обработка создания нового расписания.
+     *
+     * @param filmId идентификатор фильма
+     * @param hallId идентификатор зала
+     * @param dates  список дат
+     * @param times  список времени
+     * @return перенаправление на страницу расписания
+     */
     @PostMapping("/create")
     public String createHallShedule(
             @RequestParam("filmId") Long filmId,
@@ -57,15 +75,32 @@ public class HallSheduleController {
         return "redirect:/admin/hallShedules";
     }
 
+    /**
+     * Отображение формы редактирования расписания.
+     *
+     * @param id    идентификатор расписания
+     * @param model объект модели
+     * @return путь к шаблону редактирования расписания
+     */
     @GetMapping("/edit/{id}")
     public String editHallShedule(@PathVariable Long id, Model model) {
         HallShedule hallShedule = hallSheduleService.findHallSheduleById(id);
         model.addAttribute("hallShedule", hallShedule);
         model.addAttribute("films", filmService.findAllFilms());
         model.addAttribute("halls", hallService.findAllHalls());
-        return "editHallShedule";
+        return "admin/editHallShedule";
     }
 
+    /**
+     * Обработка обновления расписания.
+     *
+     * @param id       идентификатор расписания
+     * @param date     новая дата
+     * @param time     новое время
+     * @param filmId   идентификатор фильма
+     * @param hallId   идентификатор зала
+     * @return перенаправление на страницу расписания
+     */
     @PostMapping("/edit/{id}")
     public String editHallShedule(@PathVariable Long id,
                                   @RequestParam("date") String date,
@@ -73,7 +108,6 @@ public class HallSheduleController {
                                   @RequestParam("filmId") Long filmId,
                                   @RequestParam("hallId") Long hallId) {
 
-        // Парсинг даты и времени
         LocalDateTime newStartTime = LocalDateTime.parse(date + "T" + time);
 
         hallSheduleService.updateHallShedule(id, newStartTime, filmService.findFimById(filmId),
@@ -81,12 +115,25 @@ public class HallSheduleController {
         return "redirect:/admin/hallShedules";
     }
 
+    /**
+     * Удаление расписания.
+     *
+     * @param id идентификатор расписания
+     * @return перенаправление на страницу расписания
+     */
     @PostMapping("/delete/{id}")
     public String deleteHallShedule(@PathVariable Long id) {
         hallSheduleService.deleteHallShedule(id);
         return "redirect:/admin/hallShedules";
     }
 
+    /**
+     * Отображение расписания залов.
+     *
+     * @param day   выбранный день (необязательный)
+     * @param model объект модели
+     * @return путь к шаблону расписания
+     */
     @GetMapping
     public String getHallSchedules(
             @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,
@@ -104,6 +151,6 @@ public class HallSheduleController {
         model.addAttribute("uniqueDays", uniqueDays);
         model.addAttribute("groupedSchedules", filteredSchedules);
 
-        return "hallShedules";
+        return "admin/hallShedules";
     }
 }

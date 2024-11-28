@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>История Билетов</title>
+</head>
+<body>
+<h1>История Билетов</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Фильм</th>
+        <th>Зал</th>
+        <th>Место</th>
+        <th>Время</th>
+        <th>Статус</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.hallShedule.film.title}"></td>
+        <td th:text="${ticket.hallShedule.hall.name}"></td>
+        <td th:text="${ticket.row + ' ' + ticket.seat}"></td>
+        <td th:text="${ticket.hallShedule.startTime}"></td>
+        <td th:text="${ticket.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

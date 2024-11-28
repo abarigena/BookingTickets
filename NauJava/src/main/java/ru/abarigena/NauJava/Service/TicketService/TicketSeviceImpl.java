@@ -53,7 +53,7 @@ public class TicketSeviceImpl implements TicketService {
      * @return удаленный объект {@link Ticket}
      */
     @Override
-    public Ticket deleteTicket(Long ticketId) {
+    public Ticket cancelBookTicket(Long ticketId) {
         ticketHistoryService.addTicketHistoryStatus(ticketId, TicketStatus.CANCELED);
         Ticket ticket = ticketRepository.findById(ticketId).get();
         ticketRepository.delete(ticket);
@@ -61,8 +61,10 @@ public class TicketSeviceImpl implements TicketService {
     }
 
     /**
-     * @param hallShedule
-     * @return
+     * Получает список билетов для заданного расписания зала.
+     *
+     * @param hallShedule расписание зала
+     * @return список билетов
      */
     @Override
     public List<Ticket> findByHallShedule(HallShedule hallShedule) {
@@ -70,9 +72,11 @@ public class TicketSeviceImpl implements TicketService {
     }
 
     /**
-     * @param shedule
-     * @param tickets
-     * @param email
+     * Подтверждает выбранные места и отправляет уведомление по email.
+     *
+     * @param shedule расписание сеанса
+     * @param tickets список билетов для подтверждения
+     * @param email   email пользователя
      */
     @Override
     public void confirmSeats(HallShedule shedule, List<Ticket> tickets, String email) {
@@ -107,8 +111,10 @@ public class TicketSeviceImpl implements TicketService {
     }
 
     /**
-     * @param schedule
-     * @return
+     * Получает занятые места для заданного расписания.
+     *
+     * @param schedule расписание зала
+     * @return карта, где ключ — ряд, а значение — список занятых мест
      */
     @Override
     public Map<Integer, List<Integer>> getBookedSeats(HallShedule schedule) {
@@ -118,5 +124,16 @@ public class TicketSeviceImpl implements TicketService {
                         Ticket::getRow,
                         Collectors.mapping(Ticket::getSeat, Collectors.toList())
                 ));
+    }
+
+    /**
+     * Получает активные билеты пользователя.
+     *
+     * @param userId ID пользователя
+     * @return список активных билетов
+     */
+    @Override
+    public List<Ticket> getActiveTicketsByUserId(Long userId) {
+        return ticketRepository.findActiveTicketsByUserId(userId);
     }
 }
