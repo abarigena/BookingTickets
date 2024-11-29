@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Актуальные билеты</title>
+</head>
+<body>
+<h1>Активные билеты</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Фильм</th>
+        <th>Дата</th>
+        <th>Зал</th>
+        <th>Ряд</th>
+        <th>Место</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.hallShedule.film.title}"></td>
+        <td th:text="${ticket.hallShedule.startTime}"></td>
+        <td th:text="${ticket.hallShedule.hall.name}"></td>
+        <td th:text="${ticket.row}"></td>
+        <td th:text="${ticket.seat}"></td>
+        <td>
+            <form th:action="@{/tickets/cancel/{id}(id=${ticket.id})}" method="post">
+                <button type="submit">Отменить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

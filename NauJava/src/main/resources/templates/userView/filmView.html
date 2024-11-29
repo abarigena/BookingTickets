@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${film.title}"></title>
+</head>
+<body>
+<h1 th:text="${film.title}"></h1>
+
+<img th:src="${film.imageUrl}" alt="Film Image" width="300" height="450" />
+<p><strong>Минимальный возраст:</strong> <span th:text="${film.minAge} + ' лет'"></span></p>
+<p><strong>Длительность:</strong> <span th:text="${film.duration} + ' минут'"></span></p>
+<p><strong>Описание:</strong></p>
+<p th:text="${film.description}"></p>
+
+<hr/>
+
+<h2>Расписание</h2>
+<label for="select-day">Выберите день:</label>
+<select id="select-day" onchange="location = this.value;">
+    <option disabled selected>-- Выберите день --</option>
+    <th:block th:each="day : ${uniqueDays}">
+        <option th:value="@{'/filmsView/' + ${film.id} + '?day=' + ${day}}" th:text="${day}"></option>
+    </th:block>
+</select>
+
+<div th:if="${filteredSchedules}">
+    <th:block th:each="entry : ${filteredSchedules.entrySet()}">
+        <div>
+            <h3 th:text="'День: ' + ${entry.key}"></h3>
+            <th:block th:each="hallEntry : ${entry.value.entrySet()}">
+                <div>
+                    <h4 th:text="'Зал: ' + ${hallEntry.key.name}"></h4>
+                    <p>
+                        <th:block th:each="schedule : ${hallEntry.value}">
+                            <a th:href="@{'/bookTicket/pickPlace/' + ${schedule.id}}"
+                               th:text="${schedule.startTime.toLocalTime()}"></a>&nbsp;
+                        </th:block>
+                    </p>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+</div>
+
+<a href="/bookTicket"><button>Вернуться к расписанию</button></a>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Поиск билетов</title>
+</head>
+<body>
+<h1>Поиск билетов</h1>
+<form th:action="@{/admin/tickets/search}" method="post">
+    <label for="identifier">Введите имя пользователя, email или номер телефона:</label>
+    <input type="text" id="identifier" name="identifier" th:value="${identifier}" required />
+    <button type="submit">Поиск</button>
+</form>
+</body>
+</html>

@@ -12,7 +12,6 @@
     <ul>
         <li th:each="film : ${films}">
             <a th:href="@{/admin/films/edit/{id}(id=${film.id})}">
-                <!-- Отображаем изображение -->
                 <img th:src="${film.imageUrl}" alt="Film Image" width="200" height="300" />
                 <button th:text="${film.title}"></button>
             </a>
