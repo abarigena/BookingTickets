@@ -1,85 +1,46 @@
 package ru.abarigena.NauJava.Controller.TicketController;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
-import ru.abarigena.NauJava.Entities.Ticket.TicketHistory;
-import ru.abarigena.NauJava.Entities.User.User;
-import ru.abarigena.NauJava.Service.TicketHistoryServise.TicketHistoryService;
 import ru.abarigena.NauJava.Service.TicketService.TicketService;
-import ru.abarigena.NauJava.Service.UserService.UserService;
 
-import java.security.Principal;
 import java.util.List;
 
-/**
- * Контроллер для управления билетами пользователя: активные билеты, история и отмена бронирования.
- */
 @Controller
-@RequestMapping("/tickets")
+@RequestMapping("admin/tickets")
 public class TicketController {
     private final TicketService ticketService;
-    private final UserService userService;
-    private final TicketHistoryService ticketHistoryService;
 
-    public TicketController(TicketService ticketService, UserService userService, TicketHistoryService ticketHistoryService) {
+    @Autowired
+    public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
-        this.userService = userService;
-        this.ticketHistoryService = ticketHistoryService;
     }
 
     /**
-     * Получение списка активных билетов для текущего пользователя.
-     *
-     * @param model     объект модели для передачи данных в шаблон
-     * @param principal объект для получения информации о текущем пользователе
-     * @return путь к шаблону со списком активных билетов
+     * Страница для поиска пользователя и отображения его активных билетов
      */
-    @GetMapping("/active")
-    public String getActiveTickets(Model model, Principal principal) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        Long userId = user.getId();
+    @GetMapping("/search")
+    public String showSearchForm(Model model) {
+        model.addAttribute("identifier", "");
+        return "admin/tickets/search";
+    }
 
-        List<Ticket> activeTickets = ticketService.getActiveTicketsByUserId(userId);
-
+    @PostMapping("/search")
+    public String searchTickets(@RequestParam("identifier") String identifier, Model model) {
+        List<Ticket> activeTickets = ticketService.getActiveTicketsByIdentifier(identifier);
         model.addAttribute("tickets", activeTickets);
-        return "tickets/active";
+        return "admin/tickets/active";
     }
 
     /**
-     * Получение истории билетов пользователя, включая отмененные и просроченные билеты.
-     *
-     * @param model     объект модели для передачи данных в шаблон
-     * @param principal объект для получения информации о текущем пользователе
-     * @return путь к шаблону с историей билетов
+     * Отмена бронирования билета
      */
-    @GetMapping("/history")
-    public String getTicketHistory(Model model, Principal principal) {
-
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        Long userId = user.getId();
-
-        List<TicketHistory> tickets = ticketHistoryService.getCanceledAndExpiredTicketsForUser(userId);
-        model.addAttribute("tickets", tickets);
-        return "tickets/history";
-    }
-
-    /**
-     * Отмена билета по его ID.
-     *
-     * @param id        идентификатор билета
-     * @param principal объект для получения информации о текущем пользователе
-     * @return перенаправление на страницу с активными билетами
-     */
-    @PostMapping("/cancel/{id}")
-    public String cancelTicket(@PathVariable Long id, Principal principal) {
-        ticketService.cancelBookTicket(id);
-        return "redirect:/tickets/active";
+    @PostMapping("/cancel/{ticketId}")
+    public String cancelTicket(@PathVariable Long ticketId) {
+        ticketService.cancelBookTicket(ticketId);
+        return "redirect:/admin/tickets/search";
     }
 }

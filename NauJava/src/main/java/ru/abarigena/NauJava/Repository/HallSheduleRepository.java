@@ -46,5 +46,12 @@ public interface HallSheduleRepository extends CrudRepository<HallShedule, Long>
     @Query(value = "SELECT DISTINCT DATE(start_time) AS date FROM hall_shedules order by date(start_time)", nativeQuery = true)
     List<java.sql.Date> findDistinctDates();
 
+    @Query("select hs from HallShedule hs" +
+            " join fetch hs.film f " +
+            "join fetch hs.hall h " +
+            "where hs.startTime >= :startDate and h.active = true and f.title = :film " +
+            "order by DATE(hs.startTime), f.title, h.name")
+    List<HallShedule> findByFilm(@Param("startDate") LocalDateTime startDate, @Param("film") String film);
+
 
 }

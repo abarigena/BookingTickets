@@ -11,7 +11,7 @@
 
 <a href="/profile"><button>профиль</button></a>
 
-<label for="select-day">Select Day:</label>
+<label for="select-day">Выберите день:</label>
 <select id="select-day" onchange="location = this.value;">
     <option disabled selected>-- Select Day --</option>
     <th:block th:each="day : ${uniqueDays}">
@@ -26,7 +26,9 @@
             <th:block th:each="filmEntry : ${entry.value}">
                 <div>
                     <!-- Отображаем название фильма -->
-                    <h3 th:text="'Film: ' + ${filmEntry.key.title}"></h3>
+                    <h3>
+                        <a th:href="@{'/filmsView/' + ${filmEntry.key.id}}" th:text="${filmEntry.key.title}"></a>
+                    </h3>
 
                     <!-- Отображаем картинку фильма, если она есть -->
                     <img th:src="${filmEntry.key.imageUrl}" alt="Film Image" width="200" height="300" />

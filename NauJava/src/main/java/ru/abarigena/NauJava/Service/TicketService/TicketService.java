@@ -18,4 +18,6 @@ public interface TicketService {
     Map<Integer, List<Integer>> getBookedSeats(HallShedule schedule);
 
     List<Ticket> getActiveTicketsByUserId(Long userId);
+
+    List<Ticket> getActiveTicketsByIdentifier(String identifier);
 }

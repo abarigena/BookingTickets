@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.HallShedule;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
 import ru.abarigena.NauJava.Entities.Ticket.TicketStatus;
+import ru.abarigena.NauJava.Entities.User.User;
 import ru.abarigena.NauJava.Repository.TicketRepository;
+import ru.abarigena.NauJava.Repository.UserRepository;
 import ru.abarigena.NauJava.Service.EmailService.EmailService;
 import ru.abarigena.NauJava.Service.TicketHistoryServise.TicketHistoryService;
 
@@ -23,13 +25,15 @@ public class TicketSeviceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final TicketHistoryService ticketHistoryService;
     private final EmailService emailService;
+    private final UserRepository userRepository;
 
     @Autowired
     public TicketSeviceImpl(TicketRepository ticketRepository, TicketHistoryService ticketHistoryService,
-                            EmailService emailService) {
+                            EmailService emailService, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketHistoryService = ticketHistoryService;
         this.emailService = emailService;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -135,5 +139,15 @@ public class TicketSeviceImpl implements TicketService {
     @Override
     public List<Ticket> getActiveTicketsByUserId(Long userId) {
         return ticketRepository.findActiveTicketsByUserId(userId);
+    }
+
+    /**
+     * @param identifier
+     * @return
+     */
+    @Override
+    public List<Ticket> getActiveTicketsByIdentifier(String identifier) {
+        User user = userRepository.findByUsernameOrEmailOrPhone(identifier);
+        return getActiveTicketsByUserId(user.getId());
     }
 }

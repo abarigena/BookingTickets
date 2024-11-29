@@ -18,17 +18,14 @@
     <label for="description">Description:</label>
     <textarea id="description" name="description" th:field="*{description}"></textarea><br/>
 
-    <!-- Отображаем текущее изображение, если оно есть -->
     <div>
         <label>Current Image:</label>
         <img th:src="${film.imageUrl}" alt="Film Image" width="200" height="300" />
     </div>
 
-    <!-- Убираем поле для ввода URL и добавляем поле для загрузки файла -->
     <label for="image">Image:</label>
     <input type="file" id="image" name="image"/><br/>
 
-    <!-- Скрытое поле для старого изображения (если оно есть) -->
     <input type="hidden" name="existingImageUrl" th:value="${film.imageUrl}"/>
 
     <button type="submit">Save Changes</button>
