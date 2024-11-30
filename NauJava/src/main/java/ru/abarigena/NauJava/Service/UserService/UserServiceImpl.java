@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +54,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         // Отправка email подтверждения
         String verificationLink = "http://localhost:8080/verify?token=" + user.getVerificationToken();
-        emailService.sendEmail(user.getEmail(), "Подтверждение регистрации",
-                "Пройдите по ссылке для подтверждения: " + verificationLink);
+        CompletableFuture.runAsync(() ->{
+            emailService.sendEmail(user.getEmail(), "Подтверждение регистрации",
+                    "Пройдите по ссылке для подтверждения: " + verificationLink);
+        });
     }
 
     /**
@@ -100,7 +103,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userRepository.save(user);
 
             String resetLink = "http://localhost:8080/resetPassword?token=" + resetToken;
-            emailService.sendEmail(user.getEmail(), "Восстановление пароля", "Пройдите по ссылке для сброса пароля: " + resetLink);
+            CompletableFuture.runAsync(()->{
+                emailService.sendEmail(user.getEmail(), "Восстановление пароля", "Пройдите по ссылке для сброса пароля: " + resetLink);
+            });
         }
     }
 

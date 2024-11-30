@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Создание отчета</title>
+</head>
+<body>
+<h1>Создание отчета</h1>
+
+<form th:action="@{/admin/reports/booked}" method="get">
+    <h2>Отчет по забронированным билетам</h2>
+    Дата начала: <input type="datetime-local" name="startDate" required>
+    Дата конца: <input type="datetime-local" name="endDate" required>
+    <button type="submit">Создать</button>
+</form>
+
+<form th:action="@{/admin/reports/canceled}" method="get">
+    <h2>Отчет по отменным билетам</h2>
+    Дата начала: <input type="datetime-local" name="startDate" required>
+    Дата конца: <input type="datetime-local" name="endDate" required>
+    <button type="submit">Создать</button>
+</form>
+
+<form th:action="@{/admin/reports/popularity}" method="get">
+    <h2>Отчет по статистики фильмов</h2>
+    Дата начала: <input type="datetime-local" name="startDate" required>
+    Дата конца: <input type="datetime-local" name="endDate" required>
+    <button type="submit">Создать</button>
+</form>
+
+<a href="/admin/reports">Назад</a>
+</body>
+</html>

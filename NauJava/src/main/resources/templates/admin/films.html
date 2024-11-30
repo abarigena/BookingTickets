@@ -6,9 +6,9 @@
 <body>
 <h1>Фильмы</h1>
 
-<a href="/admin/films/create"><button>Add Film</button></a>
+<a href="/admin/films/create"><button>Добавить фильм</button></a>
 <div>
-    <h2>Existing Films</h2>
+    <h2>Существующие фильмы</h2>
     <ul>
         <li th:each="film : ${films}">
             <a th:href="@{/admin/films/edit/{id}(id=${film.id})}">

@@ -22,20 +22,19 @@
 <div th:if="${groupedSchedules}">
     <th:block th:each="entry : ${groupedSchedules}">
         <div>
-            <h2 th:text="'Day: ' + ${entry.key}"></h2>
+            <h2 th:text="'День: ' + ${entry.key}"></h2>
             <th:block th:each="filmEntry : ${entry.value}">
                 <div>
-                    <!-- Отображаем название фильма -->
                     <h3>
                         <a th:href="@{'/filmsView/' + ${filmEntry.key.id}}" th:text="${filmEntry.key.title}"></a>
                     </h3>
 
-                    <!-- Отображаем картинку фильма, если она есть -->
+
                     <img th:src="${filmEntry.key.imageUrl}" alt="Film Image" width="200" height="300" />
 
                     <th:block th:each="hallEntry : ${filmEntry.value}">
                         <div>
-                            <h4 th:text="'Hall: ' + ${hallEntry.key.name}"></h4>
+                            <h4 th:text="'Фильм: ' + ${hallEntry.key.name}"></h4>
                             <p>
                                 <th:block th:each="schedule : ${hallEntry.value}">
                                     <a th:href="@{'/bookTicket/pickPlace/' + ${schedule.id}}"

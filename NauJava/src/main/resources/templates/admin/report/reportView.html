@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Просмотр отчета</title>
+</head>
+<body>
+<h1>Отчет ID: <span th:text="${report.id}"></span></h1>
+<p>Статус: <span th:text="${report.status}"></span></p>
+
+<div th:if="${report.status == report.status.COMPLETED}">
+    <h2>Отчет содержание:</h2>
+    <pre th:text="${report.content}"></pre>
+</div>
+
+<div th:if="${report.status == report.status.CREATED}">
+    <p>Отчет генерируется...</p>
+</div>
+
+<div th:if="${report.status == report.status.ERROR}">
+    <p>Error: <span th:text="${report.content}"></span></p>
+</div>
+
+<a href="/admin/reports">Вернуться к отчетам</a>
+</body>
+</html>

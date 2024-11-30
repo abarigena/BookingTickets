@@ -13,23 +13,25 @@
     }
 </style>
 <body>
-<h1 th:text="'Hall Schema for ' + ${schedule.hall.name}"></h1>
-<h2 th:text="'Film: ' + ${schedule.film.title}"></h2>
-<h3 th:text="'Start Time: ' + ${schedule.startTime}"></h3>
+<h1 th:text="'Схема зала для: ' + ${schedule.hall.name}"></h1>
+<h2 th:text="'Фильм: ' + ${schedule.film.title}"></h2>
+<h3 th:text="'Время начала: ' + ${schedule.startTime}"></h3>
+
+<div th:if="${error}" th:text="${error}" style="color: red;"></div>
 
 <form th:action="@{/bookTicket/pickPlace/{scheduleId}(scheduleId=${schedule.id})}" method="post">
     <input type="hidden" th:value="${schedule.id}" name="scheduleId"/>
     <table border="1">
         <thead>
         <tr>
-            <th>Row</th>
-            <th>Seats</th>
+            <th>Ряд</th>
+            <th>Место</th>
         </tr>
         </thead>
         <tbody>
         <th:block th:each="row : ${hallRows}">
             <tr>
-                <td th:text="'Row ' + ${row.row}"></td>
+                <td th:text="'Ряд ' + ${row.row}"></td>
                 <td>
                     <th:block th:each="seat : ${#numbers.sequence(1, row.seatCount)}">
                         <label>
