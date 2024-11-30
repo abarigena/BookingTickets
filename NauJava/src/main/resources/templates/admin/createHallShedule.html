@@ -7,53 +7,49 @@
 <h1>Создание расписания зала</h1>
 
 <form action="#" th:action="@{/admin/hallShedules/create}" method="post">
-    <!-- Выбор фильма -->
-    <label for="film">Film:</label>
+    <label for="film">Фильм:</label>
     <select id="film" name="filmId" required>
         <option th:each="film : ${films}" th:value="${film.id}" th:text="${film.title}"></option>
     </select>
 
-    <!-- Выбор зала -->
-    <label for="hall">Hall:</label>
+    <label for="hall">Зал:</label>
     <select id="hall" name="hallId" required>
         <option th:each="hall : ${halls}" th:value="${hall.id}" th:text="${hall.name}"></option>
     </select>
 
-    <!-- Даты -->
-    <label>Dates:</label>
+    <label>Даты:</label>
     <div id="date-container">
         <div>
             <input type="date" name="dates" required />
-            <button type="button" onclick="removeField(this)">Remove</button>
+            <button type="button" onclick="removeField(this)">Удалить</button>
         </div>
     </div>
-    <button type="button" onclick="addDateField()">Add Date</button>
+    <button type="button" onclick="addDateField()">Добавить дату</button>
 
-    <!-- Время -->
-    <label>Times:</label>
+    <label>Время:</label>
     <div id="time-container">
         <div>
             <input type="time" name="times" required />
-            <button type="button" onclick="removeField(this)">Remove</button>
+            <button type="button" onclick="removeField(this)">Удалить</button>
         </div>
     </div>
-    <button type="button" onclick="addTimeField()">Add Time</button>
+    <button type="button" onclick="addTimeField()">Добавить время</button>
 
-    <button type="submit">Create Schedule</button>
+    <button type="submit">Создать расписание</button>
 </form>
 
 <script>
     function addDateField() {
         const container = document.getElementById("date-container");
         const div = document.createElement("div");
-        div.innerHTML = '<input type="date" name="dates" required /> <button type="button" onclick="removeField(this)">Remove</button>';
+        div.innerHTML = '<input type="date" name="dates" required /> <button type="button" onclick="removeField(this)">Удалить</button>';
         container.appendChild(div);
     }
 
     function addTimeField() {
         const container = document.getElementById("time-container");
         const div = document.createElement("div");
-        div.innerHTML = '<input type="time" name="times" required /> <button type="button" onclick="removeField(this)">Remove</button>';
+        div.innerHTML = '<input type="time" name="times" required /> <button type="button" onclick="removeField(this)">Удалить</button>';
         container.appendChild(div);
     }
 
@@ -63,6 +59,6 @@
     }
 </script>
 
-<a href="/admin/hallShedules">Back to Hall Schedules</a>
+<a href="/admin/hallShedules">Вернуться к расписаниям</a>
 </body>
 </html>

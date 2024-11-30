@@ -7,36 +7,31 @@
 <h1>Редактирование расписания</h1>
 <form th:action="@{/admin/hallShedules/edit/{id}(id=${hallShedule.id})}" th:object="${hallShedule}" method="post">
 
-    <!-- Поле выбора фильма -->
-    <label for="film">Film:</label>
+    <label for="film">Фильм:</label>
     <select id="film" name="filmId" required>
         <option th:each="film : ${films}" th:value="${film.id}" th:text="${film.title}"></option>
     </select><br/>
 
-    <!-- Поле выбора зала -->
-    <label for="hall">Hall:</label>
+    <label for="hall">Зал:</label>
     <select id="hall" name="hallId" required>
         <option th:each="hall : ${halls}" th:value="${hall.id}" th:text="${hall.name}"></option>
     </select><br/>
 
-    <!-- Поле выбора даты -->
-    <label for="date">Date:</label>
+    <label for="date">Дата:</label>
     <input type="date" id="date" name="date"
            th:value="${#temporals.format(hallShedule.startTime, 'yyyy-MM-dd')}" required/><br/>
 
-    <!-- Поле выбора времени -->
-    <label for="time">Time:</label>
+    <label for="time">Время:</label>
     <input type="time" id="time" name="time"
            th:value="${#temporals.format(hallShedule.startTime, 'HH:mm')}" required/><br/>
 
 
-    <button type="submit">Update Schedule</button>
+    <button type="submit">Обновить расписание</button>
 </form>
 
-<!-- Удаление расписания -->
 <form th:action="@{/admin/hallShedules/delete/{id}(id=${hallShedule.id})}" method="post">
-    <button type="submit">Delete Schedule</button>
+    <button type="submit">Удалить расписание</button>
 </form>
-<a href="/admin/hallShedules">Back to Hall Schedules</a>
+<a href="/admin/hallShedules">Вернуться к расписаниям</a>
 </body>
 </html>

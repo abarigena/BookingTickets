@@ -17,13 +17,13 @@
 <div th:if="${groupedSchedules}">
     <th:block th:each="entry : ${groupedSchedules}">
         <div>
-            <h2 th:text="'Day: ' + ${entry.key}"></h2>
+            <h2 th:text="'День: ' + ${entry.key}"></h2>
             <th:block th:each="filmEntry : ${entry.value}">
                 <div>
-                    <h3 th:text="'Film: ' + ${filmEntry.key.title}"></h3>
+                    <h3 th:text="'Фильм: ' + ${filmEntry.key.title}"></h3>
                     <th:block th:each="hallEntry : ${filmEntry.value}">
                         <div>
-                            <h4 th:text="'Hall: ' + ${hallEntry.key.name}"></h4>
+                            <h4 th:text="'Зал: ' + ${hallEntry.key.name}"></h4>
                             <p>
                                 <th:block th:each="schedule : ${hallEntry.value}">
                                     <a th:href="@{'/admin/hallShedules/edit/' + ${schedule.id}}"

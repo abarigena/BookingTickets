@@ -93,4 +93,15 @@ public class TicketHistory {
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Билет -" +
+                " Пользователь:" + user.getUsername() +
+                ", Зал: " + hallShedule.getHall().getName() +
+                ", Фильм: " + hallShedule.getFilm().getTitle() +
+                ", Ряд: " + row +
+                ", Место: " + seat +
+                ", Статус билета: " + status ;
+    }
 }

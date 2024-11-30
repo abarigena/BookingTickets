@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Отчеты</title>
+</head>
+<body>
+<h1>Отчеты</h1>
+
+<div th:if="${message}" style="color: green;">[[${message}]]</div>
+<div th:if="${error}" style="color: red;">[[${error}]]</div>
+
+<a href="reports/create">Создать отчет</a>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="report : ${reports}">
+        <td th:text="${report.id}"></td>
+        <td th:text="${report.status}"></td>
+        <td>
+            <a th:href="@{/admin/reports/{id}(id=${report.id})}">Посмотреть</a>
+            <form th:action="@{/admin/reports/delete/{id}(id=${report.id})}" method="post" style="display: inline;">
+                <button type="submit" onclick="return confirm('Вы уверены что хотите удалить отчёт?')">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

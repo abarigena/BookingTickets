@@ -118,6 +118,11 @@ public class HallScheduleControllerUser {
         String username = principal.getName();
         User user = userService.findByUsername(username);
 
+        if(!user.isEmailVerified()){
+            redirectAttributes.addFlashAttribute("error", "Email не подтвержден. Пожалуйста, подтвердите ваш email.");
+            return "redirect:/bookTicket/pickPlace/" + scheduleId;
+        }
+
         // Преобразуем строки в объекты Ticket
         List<Ticket> tickets = selectedSeats.stream()
                 .map(seat -> {

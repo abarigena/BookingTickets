@@ -6,35 +6,35 @@
 <body>
 <h1>Редактирование фильма</h1>
 <form th:action="@{/admin/films/edit/{id}(id=${film.id})}" th:object="${film}" method="post" enctype="multipart/form-data">
-    <label for="title">Title:</label>
+    <label for="title">Название:</label>
     <input type="text" id="title" name="title" th:field="*{title}" required/><br/>
 
-    <label for="minAge">Minimum Age:</label>
+    <label for="minAge">Минимальный возраст:</label>
     <input type="number" id="minAge" name="minAge" th:field="*{minAge}"/><br/>
 
-    <label for="duration">Duration (minutes):</label>
+    <label for="duration">Продолжительность (в минутах):</label>
     <input type="number" id="duration" name="duration" th:field="*{duration}"/><br/>
 
-    <label for="description">Description:</label>
+    <label for="description">Описание:</label>
     <textarea id="description" name="description" th:field="*{description}"></textarea><br/>
 
     <div>
-        <label>Current Image:</label>
+        <label>Текущее изображение:</label>
         <img th:src="${film.imageUrl}" alt="Film Image" width="200" height="300" />
     </div>
 
-    <label for="image">Image:</label>
+    <label for="image">Изображение:</label>
     <input type="file" id="image" name="image"/><br/>
 
     <input type="hidden" name="existingImageUrl" th:value="${film.imageUrl}"/>
 
-    <button type="submit">Save Changes</button>
+    <button type="submit">Сохранить изменения</button>
 </form>
 
 <form th:action="@{/admin/films/delete/{id}(id=${film.id})}" method="post">
-    <button type="submit">Delete Film</button>
+    <button type="submit">Удалить фильм</button>
 </form>
 
-<a href="/admin/films">Back to Films</a>
+<a href="/admin/films">Вернуться</a>
 </body>
 </html>

@@ -37,9 +37,11 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/registration", "/forgotPassword", "/resetPassword", "/verify").permitAll()
-                        .requestMatchers("/swagger-ui/index.html","/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/swagger-ui/index.html","/admin/**","/swagger-ui/**",
+                                "/v3/api-docs/**","/api/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .csrf(crsf -> crsf.disable())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/bookTicket",true)
@@ -50,8 +52,24 @@ public class SpringSecurityConfig {
                         .logoutSuccessUrl("/login") // Перенаправление после выхода
                         .invalidateHttpSession(true) // Удаление сессии
                         .deleteCookies("JSESSIONID") // Удаление cookies
-                );
+                )
+                .exceptionHandling(exceptions -> exceptions
+                        .accessDeniedPage("/403"));
 
         return httpSecurity.build();
     }
+
+    /*@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()  // Временно разрешить все запросы
+                )
+                .csrf(crsf -> crsf.disable())
+                .formLogin(form -> form.disable())  // Отключить форму логина для теста
+                .httpBasic(http -> http.disable()); // Отключить базовую авторизацию для теста
+
+        return httpSecurity.build();
+    }*/
+
 }
