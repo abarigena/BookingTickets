@@ -2,6 +2,8 @@ package ru.abarigena.NauJava.Service.UserService;
 
 import ru.abarigena.NauJava.Entities.User.User;
 
+import java.util.List;
+
 /**
  * Сервис для управления объектами сущности {@link User}.
  */
@@ -29,4 +31,8 @@ public interface UserService {
     boolean resetPassword(String token, String newPassword);
 
     User updateUser(String username, String firstName, String lastname, int age, String phoneNumber);
+
+    User findById(Long id);
+
+    List<User> findAll();
 }
