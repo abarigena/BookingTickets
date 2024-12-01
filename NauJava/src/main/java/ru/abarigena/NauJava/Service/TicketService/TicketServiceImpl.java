@@ -1,6 +1,8 @@
 package ru.abarigena.NauJava.Service.TicketService;
 
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.HallShedule;
@@ -20,7 +22,8 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-public class TicketSeviceImpl implements TicketService {
+public class TicketServiceImpl implements TicketService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final TicketRepository ticketRepository;
     private final TicketHistoryService ticketHistoryService;
@@ -28,8 +31,8 @@ public class TicketSeviceImpl implements TicketService {
     private final UserRepository userRepository;
 
     @Autowired
-    public TicketSeviceImpl(TicketRepository ticketRepository, TicketHistoryService ticketHistoryService,
-                            EmailService emailService, UserRepository userRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketHistoryService ticketHistoryService,
+                             EmailService emailService, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketHistoryService = ticketHistoryService;
         this.emailService = emailService;
@@ -47,6 +50,7 @@ public class TicketSeviceImpl implements TicketService {
         Ticket saveTicket = ticketRepository.save(ticket);
 
         ticketHistoryService.addTicketHistory(saveTicket, TicketStatus.BOOKED);
+        logger.info("Билет успешно добавлен: {}", saveTicket);
         return saveTicket;
     }
 
@@ -61,6 +65,7 @@ public class TicketSeviceImpl implements TicketService {
         ticketHistoryService.addTicketHistoryStatus(ticketId, TicketStatus.CANCELED);
         Ticket ticket = ticketRepository.findById(ticketId).get();
         ticketRepository.delete(ticket);
+        logger.info("Бронирование билета с ID {} отменено", ticketId);
         return ticket;
     }
 
@@ -84,20 +89,20 @@ public class TicketSeviceImpl implements TicketService {
      */
     @Override
     public void confirmSeats(HallShedule shedule, List<Ticket> tickets, String email) {
+        logger.info("Подтверждение мест для сеанса: {}", shedule);
         // Проверка занятых мест
         Map<Integer, List<Integer>> bookedSeats = getBookedSeats(shedule);
 
         for (Ticket ticket : tickets) {
             if (bookedSeats.getOrDefault(ticket.getRow(), new ArrayList<>())
                     .contains(ticket.getSeat())) {
-                throw new IllegalStateException("Seat " + ticket.getRow() + "-" + ticket.getSeat() + " is already booked!");
+                logger.error("Место {}-{} уже занято", ticket.getRow(), ticket.getSeat());
+                throw new IllegalStateException("Место " + ticket.getRow() + "-" + ticket.getSeat() + " Уже забронировано!");
             }
         }
 
-        // Сохранение билетов
         tickets.forEach(this::addTicket);
 
-        // Формируем информацию о билете, включая время, зал, фильм
         StringBuilder ticketInfo = new StringBuilder("Вы успешно забронировали билеты:\n");
         tickets.forEach(ticket -> {
             ticketInfo.append("Ряд: ").append(ticket.getRow())
@@ -108,9 +113,8 @@ public class TicketSeviceImpl implements TicketService {
                     .append("\n\n");
         });
 
-        // Асинхронная отправка email
         CompletableFuture.runAsync(() -> {
-            emailService.sendEmail(email, "Ticket Booking Confirmation", ticketInfo.toString());
+            emailService.sendEmail(email, "Информация о забронированных билетах", ticketInfo.toString());
         });
     }
 
