@@ -1,5 +1,7 @@
 package ru.abarigena.NauJava.Service.TicketHistoryServise;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -8,7 +10,7 @@ import ru.abarigena.NauJava.Entities.Ticket.TicketHistory;
 import ru.abarigena.NauJava.Entities.Ticket.TicketStatus;
 import ru.abarigena.NauJava.Repository.TicketHistoryRepository;
 import ru.abarigena.NauJava.Repository.TicketRepository;
-import ru.abarigena.NauJava.Service.TicketService.TicketService;
+import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class TicketHistoryServiceImpl implements TicketHistoryService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
+
     private final TicketHistoryRepository ticketHistoryRepository;
     private final TicketRepository ticketRepository;
 
@@ -77,12 +81,19 @@ public class TicketHistoryServiceImpl implements TicketHistoryService {
     @Scheduled(fixedRate = 60000)
     @Override
     public void updateExpiredTicketsStatus() {
+        logger.info("Запуск обновления статусов для истекших билетов.");
+
         CompletableFuture.runAsync(() -> {
             List<TicketHistory> ticketsToUpdate = ticketHistoryRepository.findTicketsWithExpiredSchedule();
+            logger.info("Найдено {} истекших билетов для обновления статуса.", ticketsToUpdate.size());
             for (TicketHistory ticket : ticketsToUpdate) {
                 addTicketHistoryStatus(ticket.getId(), TicketStatus.CONDUCTED);
                 ticketRepository.deleteById(ticket.getId());
+                logger.info("Билет с ID: {} обновлен на статус CONDUCTED и удален из репозитория.", ticket.getId());
             }
+        }).exceptionally(ex -> {
+            logger.error("Ошибка при обновлении статусов истекших билетов: {}", ex.getMessage());
+            return null;
         });
     }
 }

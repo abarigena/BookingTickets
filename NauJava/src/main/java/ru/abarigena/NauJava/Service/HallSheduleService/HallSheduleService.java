@@ -6,7 +6,6 @@ import ru.abarigena.NauJava.Entities.HallShedule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +29,6 @@ public interface HallSheduleService {
     List<LocalDate> findUniqueDays();
 
     Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getGroupedSchedules();
-
-    Map<Long, List<LocalTime>> getSchedules();
 
     Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getUpcomingSchedules();
 

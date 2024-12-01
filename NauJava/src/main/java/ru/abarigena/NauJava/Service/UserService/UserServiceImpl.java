@@ -1,6 +1,7 @@
 package ru.abarigena.NauJava.Service.UserService;
 
 import jakarta.transaction.Transactional;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,10 +17,13 @@ import ru.abarigena.NauJava.Service.EmailService.EmailService;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -41,20 +45,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public void addUser(User user) {
-        user.setUserRole(Collections.singleton(UserRole.USER));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        logger.info("Добавление пользователя: {}", user);
 
-        user.setVerificationToken(UUID.randomUUID().toString());
-        user.setEmailVerified(false);
+        try{
+            user.setUserRole(Collections.singleton(UserRole.USER));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        userRepository.save(user);
+            user.setVerificationToken(UUID.randomUUID().toString());
+            user.setEmailVerified(false);
 
-        // Отправка email подтверждения
-        String verificationLink = "http://localhost:8080/verify?token=" + user.getVerificationToken();
-        CompletableFuture.runAsync(() ->{
-            emailService.sendEmail(user.getEmail(), "Подтверждение регистрации",
-                    "Пройдите по ссылке для подтверждения: " + verificationLink);
-        });
+            userRepository.save(user);
+
+            // Отправка email подтверждения
+            String verificationLink = "http://localhost:8080/verify?token=" + user.getVerificationToken();
+            CompletableFuture.runAsync(() -> {
+                emailService.sendEmail(user.getEmail(), "Подтверждение регистрации",
+                        "Пройдите по ссылке для подтверждения: " + verificationLink);
+                logger.info("Письмо для подтверждения регистрации отправлено на email: {}", user.getEmail());
+            });
+        } catch (Exception e) {
+            logger.error("Ошибка при добавлении пользователя: {}", user.getUsername(), e);
+        }
     }
 
     /**
@@ -76,13 +87,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public boolean verifyEmail(String token) {
+        logger.info("Подтверждение email с токеном: {}", token);
+
         User user = userRepository.findByVerificationToken(token);
         if(user!= null){
             user.setEmailVerified(true);
             user.setVerificationToken(null);
             userRepository.save(user);
+            logger.info("Email успешно подтвержден для пользователя: {}", user.getUsername());
             return true;
         }
+        logger.warn("Не удалось подтвердить email: пользователь с токеном {} не найден", token);
         return false;
     }
 
@@ -93,6 +108,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public void initiatePasswordReset(String email){
+        logger.info("Инициация восстановления пароля для email: {}", email);
         User user = userRepository.findByEmail(email);
         if(user != null){
             String resetToken = UUID.randomUUID().toString();
@@ -101,8 +117,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
             String resetLink = "http://localhost:8080/resetPassword?token=" + resetToken;
             CompletableFuture.runAsync(()->{
-                emailService.sendEmail(user.getEmail(), "Восстановление пароля", "Пройдите по ссылке для сброса пароля: " + resetLink);
+                emailService.sendEmail(user.getEmail(), "Восстановление пароля", "Пройдите по ссылке для сброса пароля: "
+                        + resetLink);
+                logger.info("Письмо для восстановления пароля отправлено на email: {}", user.getEmail());
             });
+        }else {
+            logger.warn("Не удалось найти пользователя для восстановления пароля по email: {}", email);
         }
     }
 
@@ -116,14 +136,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     @Override
     public boolean resetPassword(String token, String newPassword) {
+        logger.info("Сброс пароля для пользователя с токеном: {}", token);
         User user = userRepository.findByVerificationToken(token);
         if(user != null){
             user.setPassword(passwordEncoder.encode(newPassword));
             user.setVerificationToken(null);
             userRepository.save(user);
+            logger.info("Пароль успешно сброшен для пользователя: {}", user.getUsername());
             return true;
         }
-        System.out.println("Ошибка");
+        logger.error("Не удалось сбросить пароль: пользователь с токеном {} не найден", token);
         return false;
     }
 
@@ -139,14 +161,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
      */
     @Override
     public User updateUser(String username, String firstName, String lastname, int age, String phoneNumber) {
+        logger.info("Обновление информации для пользователя: {}", username);
+
         User user = userRepository.findByUsername(username);
 
-        user.setFirstName(firstName);
-        user.setLastName(lastname);
-        user.setAge(age);
-        user.setPhoneNumber(phoneNumber);
+        if(user != null){
+            user.setFirstName(firstName);
+            user.setLastName(lastname);
+            user.setAge(age);
+            user.setPhoneNumber(phoneNumber);
 
-        userRepository.save(user);
+            userRepository.save(user);
+            logger.info("Информация о пользователе обновлена: {}", username);
+        }else {
+            logger.warn("Не удалось найти пользователя с именем: {}", username);
+        }
         return user;
     }
 
@@ -177,9 +206,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        logger.info("Загрузка данных пользователя для аутентификации: {}", username);
         User myAppUser = userRepository.findByUsername(username);
         org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(myAppUser.getUsername(),
                 myAppUser.getPassword(), mapRoles(myAppUser.getUserRole()));
+        logger.info("Пользователь {} найден и готов для аутентификации", username);
         return user;
     }
 

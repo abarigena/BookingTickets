@@ -1,15 +1,17 @@
 package ru.abarigena.NauJava.Service.HallSheduleService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.Film;
 import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallShedule;
 import ru.abarigena.NauJava.Repository.HallSheduleRepository;
+import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class HallSheduleServiceImpl implements HallSheduleService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final HallSheduleRepository hallSheduleRepository;
 
@@ -89,12 +92,14 @@ public class HallSheduleServiceImpl implements HallSheduleService {
      */
     @Override
     public HallShedule createHallShedule(LocalDateTime date, Film film, Hall hall) {
+        logger.info("Создание нового расписания для фильма: {} в зале: {} на дату: {}", film.getTitle(), hall.getName(), date);
         HallShedule hallShedule = new HallShedule();
 
         hallShedule.setStartTime(date);
         hallShedule.setFilm(film);
         hallShedule.setHall(hall);
 
+        logger.info("Расписание успешно создано: {}", hallShedule);
         return hallSheduleRepository.save(hallShedule);
     }
 
@@ -109,12 +114,15 @@ public class HallSheduleServiceImpl implements HallSheduleService {
      */
     @Override
     public HallShedule updateHallShedule(Long id, LocalDateTime date, Film film, Hall hall) {
+        logger.info("Обновление расписания с ID: {} на новую дату: {}, для фильма: {} в зале: {}", id, date, film.getTitle(), hall.getName());
+
         HallShedule hallShedule = hallSheduleRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Hall not found"));
 
         hallShedule.setStartTime(date);
         hallShedule.setFilm(film);
         hallShedule.setHall(hall);
 
+        logger.info("Расписание успешно обновлено: {}", hallShedule);
         return hallSheduleRepository.save(hallShedule);
     }
 
@@ -125,6 +133,7 @@ public class HallSheduleServiceImpl implements HallSheduleService {
      */
     @Override
     public void deleteHallShedule(Long id) {
+        logger.info("Удаление расписания с ID: {}", id);
         hallSheduleRepository.deleteById(id);
     }
 
@@ -158,25 +167,6 @@ public class HallSheduleServiceImpl implements HallSheduleService {
                                 Collectors.groupingBy(
                                         HallShedule::getHall
                                 )
-                        )
-                ));
-    }
-
-    /**
-     * Возвращает расписания с временем начала, сгруппированным по ID.
-     *
-     * @return карта расписаний
-     */
-    @Override
-    public Map<Long, List<LocalTime>> getSchedules() {
-        List<HallShedule> shedules = (List<HallShedule>) hallSheduleRepository.findAll();
-
-        return shedules.stream()
-                .collect(Collectors.groupingBy(
-                        HallShedule::getId, // Группируем по id
-                        Collectors.mapping(
-                                shedule -> shedule.getStartTime().toLocalTime(), // Извлекаем LocalTime из startTime
-                                Collectors.toList() // Собираем в список
                         )
                 ));
     }

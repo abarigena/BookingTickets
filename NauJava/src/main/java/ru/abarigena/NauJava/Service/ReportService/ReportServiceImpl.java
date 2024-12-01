@@ -1,5 +1,7 @@
 package ru.abarigena.NauJava.Service.ReportService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.Report.Report;
@@ -7,6 +9,7 @@ import ru.abarigena.NauJava.Entities.Report.ReportStatus;
 import ru.abarigena.NauJava.Entities.Ticket.TicketHistory;
 import ru.abarigena.NauJava.Repository.ReportRepository;
 import ru.abarigena.NauJava.Repository.TicketHistoryRepository;
+import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ReportServiceImpl implements ReportService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
     private final TicketHistoryRepository ticketHistoryRepository;
     private final ReportRepository reportRepository;
 
@@ -37,6 +41,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report();
         report.setStatus(ReportStatus.CREATED);
         reportRepository.save(report);
+        logger.info("Создание отчета о забронированных билетах с диапазоном: {} - {}", startDate, endDate);
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -46,9 +51,11 @@ public class ReportServiceImpl implements ReportService {
 
                 report.setContent(content.toString());
                 report.setStatus(ReportStatus.COMPLETED);
+                logger.info("Отчет о забронированных билетах с диапазоном: {} - {} успешно сгенерирован", startDate, endDate);
             } catch (Exception e) {
                 report.setStatus(ReportStatus.ERROR);
                 report.setContent("Ошибка: " + e.getMessage());
+                logger.error("Ошибка при генерации отчета о забронированных билетах с диапазоном: {} - {}", startDate, endDate, e);
             }
             reportRepository.save(report);
         });
@@ -69,6 +76,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report();
         report.setStatus(ReportStatus.CREATED);
         reportRepository.save(report);
+        logger.info("Создание отчета по отмененным билетам с диапазоном: {} - {}", startDate, endDate);
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -78,9 +86,11 @@ public class ReportServiceImpl implements ReportService {
 
                 report.setContent(content.toString());
                 report.setStatus(ReportStatus.COMPLETED);
+                logger.info("Отчет по отмененным билетам с диапазоном: {} - {} успешно сгенерирован", startDate, endDate);
             } catch (Exception e) {
                 report.setStatus(ReportStatus.ERROR);
                 report.setContent("Ошибка: " + e.getMessage());
+                logger.error("Ошибка при генерации отчета по отмененным билетам с диапазоном: {} - {}", startDate, endDate, e);
             }
             reportRepository.save(report);
         });
@@ -102,6 +112,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report();
         report.setStatus(ReportStatus.CREATED);
         reportRepository.save(report);
+        logger.info("Создание отчета по популярности фильмов с диапазоном: {} - {}", startDate, endDate);
 
         CompletableFuture.runAsync(() -> {
             try {
@@ -116,9 +127,11 @@ public class ReportServiceImpl implements ReportService {
 
                 report.setContent(content.toString());
                 report.setStatus(ReportStatus.COMPLETED);
+                logger.info("Отчет по популярности фильмов с диапазоном: {} - {} успешно сгенерирован", startDate, endDate);
             } catch (Exception e) {
                 report.setStatus(ReportStatus.ERROR);
                 report.setContent("Ошибка: " + e.getMessage());
+                logger.error("Ошибка при генерации отчета по популярности фильмов с диапазоном: {} - {}", startDate, endDate, e);
             }
             reportRepository.save(report);
         });
@@ -145,6 +158,7 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public void deleteReport(Long id) {
+        logger.info("Удаление отчета с ID: {}", id);
         reportRepository.deleteById(id);
     }
 

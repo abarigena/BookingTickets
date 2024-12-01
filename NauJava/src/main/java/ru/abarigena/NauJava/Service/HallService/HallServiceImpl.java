@@ -1,5 +1,7 @@
 package ru.abarigena.NauJava.Service.HallService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -10,12 +12,14 @@ import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallRow;
 import ru.abarigena.NauJava.Repository.HallRepository;
 import ru.abarigena.NauJava.Repository.HallRowRepository;
+import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 public class HallServiceImpl implements HallService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final HallRepository hallRepository;
     private final HallRowRepository hallRowRepository;
@@ -38,6 +42,7 @@ public class HallServiceImpl implements HallService {
     @Override
     public void deleteHall(Long id)
     {
+        logger.info("Начало удаления зала с ID: {}", id);
 
         TransactionStatus status = transactionManager.getTransaction(new
                 DefaultTransactionDefinition());
@@ -49,9 +54,11 @@ public class HallServiceImpl implements HallService {
             hallRepository.deleteById(id);
 
             transactionManager.commit(status);
+            logger.info("Зал с ID: {} успешно удален", id);
         }
         catch (DataAccessException e) {
             transactionManager.rollback(status);
+            logger.error("Ошибка при удалении зала с ID: {}. Операция откатана.", id, e);
             throw e;
         }
     }
@@ -86,9 +93,12 @@ public class HallServiceImpl implements HallService {
      */
     @Override
     public Hall createHall(String name, boolean active) {
+        logger.info("Создание нового зала с названием: {} и статусом активности: {}", name, active);
+
         Hall hall = new Hall();
         hall.setName(name);
         hall.setActive(active);
+        logger.info("Новый зал с ID: {} успешно создан", hall.getId());
         return hallRepository.save(hall);
     }
 
@@ -102,14 +112,14 @@ public class HallServiceImpl implements HallService {
      */
     @Override
     public Hall updateHall(Long id, String name, boolean active) {
-        // Найти зал по id
+        logger.info("Обновление данных зала с ID: {}. Новое название: {}. Новый статус активности: {}", id, name, active);
         Hall hall = hallRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Hall not found"));
 
-        // Обновить поля
+
         hall.setName(name);
         hall.setActive(active);
 
-        // Сохранить обновленный зал
+        logger.info("Зал с ID: {} успешно обновлен", hall.getId());
         return hallRepository.save(hall);
     }
 }

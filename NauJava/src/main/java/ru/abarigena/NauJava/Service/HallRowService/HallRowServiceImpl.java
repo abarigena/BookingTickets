@@ -1,15 +1,19 @@
 package ru.abarigena.NauJava.Service.HallRowService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.Hall;
 import ru.abarigena.NauJava.Entities.HallRow;
 import ru.abarigena.NauJava.Repository.HallRowRepository;
+import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
 import java.util.List;
 
 @Service
 public class HallRowServiceImpl implements HallRowService {
+    private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final HallRowRepository hallRowRepository;
 
