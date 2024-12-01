@@ -14,10 +14,7 @@ import ru.abarigena.NauJava.Entities.User.UserRole;
 import ru.abarigena.NauJava.Repository.UserRepository;
 import ru.abarigena.NauJava.Service.EmailService.EmailService;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -151,6 +148,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         userRepository.save(user);
         return user;
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public List<User> findAll() {
+        return (List<User>) userRepository.findAll();
     }
 
     /**
