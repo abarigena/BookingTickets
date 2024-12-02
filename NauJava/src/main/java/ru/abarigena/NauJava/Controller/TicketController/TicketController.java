@@ -9,6 +9,9 @@ import ru.abarigena.NauJava.Service.TicketService.TicketService;
 
 import java.util.List;
 
+/**
+ * Контроллер для работы с билетами
+ */
 @Controller
 @RequestMapping("admin/tickets")
 public class TicketController {

@@ -9,6 +9,9 @@ import ru.abarigena.NauJava.Service.FilmService.FilmService;
 
 import java.util.List;
 
+/**
+ * REST-контроллер для управления фильмами.
+ */
 @RestController
 @RequestMapping("/api/films")
 public class FilmControllerRest {
@@ -19,27 +22,41 @@ public class FilmControllerRest {
         this.filmService = filmService;
     }
 
+    /**
+     * Получает список всех фильмов.
+     *
+     * @return список фильмов
+     */
     @GetMapping("/all")
     public List<Film> getAllFilms() {
         return filmService.findAllFilms();
     }
 
+    /**
+     * Находит фильм по его ID.
+     *
+     * @param id ID фильма
+     * @return найденный фильм
+     */
     @GetMapping("/find/{id}")
     public Film getFilm(@PathVariable Long id) {
         return filmService.findFimById(id);
     }
 
+    /**
+     * Создает новый фильм.
+     *
+     * @param film создает обьект фильма
+     * @return созданный фильм
+     */
     @PostMapping("/create")
     public ResponseEntity<Film> createFilm(
-            @RequestParam String title,
-            @RequestParam int minAge,
-            @RequestParam int duration,
-            @RequestParam String description,
-            @RequestParam String imageUrl) {
+            @RequestBody Film film) {
 
         try {
 
-            Film createdFilm = filmService.createFilm(title, minAge, duration, description, imageUrl);
+            Film createdFilm = filmService.createFilm(film.getTitle(), film.getMinAge(), film.getDuration(), film.getDescription()
+                    , film.getImageUrl());
 
             return new ResponseEntity<>(createdFilm, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -48,6 +65,13 @@ public class FilmControllerRest {
         }
     }
 
+    /**
+     * Обновляет информацию о фильме.
+     *
+     * @param id   ID фильма
+     * @param film объект фильма с новыми данными
+     * @return статус обновления
+     */
     @PutMapping("/update/{id}")
     public ResponseEntity<Film> updateFilm(@PathVariable Long id, @RequestBody Film film) {
         try {
@@ -60,6 +84,12 @@ public class FilmControllerRest {
         }
     }
 
+    /**
+     * Удаляет фильм по его ID.
+     *
+     * @param id ID фильма
+     * @return статус удаления
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteFilm(@PathVariable Long id) {
         filmService.deleteFilm(id);

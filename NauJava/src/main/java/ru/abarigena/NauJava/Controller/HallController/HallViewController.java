@@ -11,6 +11,9 @@ import ru.abarigena.NauJava.Service.HallService.HallService;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления залами.
+ */
 @Controller
 @RequestMapping("/admin/halls")
 public class HallViewController {

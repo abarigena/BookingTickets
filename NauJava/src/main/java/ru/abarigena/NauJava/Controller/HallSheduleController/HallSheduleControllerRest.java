@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST-контроллер для управления расписаниями залов.
+ */
 @RestController
 @RequestMapping("/api/hallShedules")
 public class HallSheduleControllerRest {
@@ -29,6 +32,14 @@ public class HallSheduleControllerRest {
         this.hallService = hallService;
     }
 
+    /**
+     * Создает расписания для указанного фильма в зале.
+     *
+     * @param filmId ID фильма.
+     * @param hallId ID зала.
+     * @param dates  Список дат.
+     * @param times  Список времен.
+     */
     @PostMapping("/create")
     public void createHallShedule(@RequestParam Long filmId, @RequestParam Long hallId,
                                   @RequestParam List<String> dates, @RequestParam List<String> times) {
@@ -40,6 +51,15 @@ public class HallSheduleControllerRest {
         }
     }
 
+    /**
+     * Обновляет существующее расписание.
+     *
+     * @param id      ID расписания.
+     * @param date    Обновленная дата.
+     * @param time    Обновленное время.
+     * @param filmId  ID фильма.
+     * @param hallId  ID зала.
+     */
     @PutMapping("/update/{id}")
     public void editHallShedule(@PathVariable Long id, @RequestParam String date, @RequestParam String time,
                                 @RequestParam Long filmId, @RequestParam Long hallId) {
@@ -47,11 +67,22 @@ public class HallSheduleControllerRest {
         hallSheduleService.updateHallShedule(id, newStartTime, filmService.findFimById(filmId), hallService.findHallById(hallId));
     }
 
+    /**
+     * Удаляет расписание по его ID.
+     *
+     * @param id ID расписания.
+     */
     @DeleteMapping("/delete/{id}")
     public void deleteHallShedule(@PathVariable Long id) {
         hallSheduleService.deleteHallShedule(id);
     }
 
+    /**
+     * Возвращает расписания залов, сгруппированные по дате, фильму и залу.
+     *
+     * @param day Опционально: конкретный день для фильтрации.
+     * @return Сгруппированные расписания.
+     */
     @GetMapping("/all")
     public Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getHallSchedules(
             @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {

@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Представляет сущность пользователя в системе.
+ */
 @Entity
 @Table(name ="users")
 public class User {

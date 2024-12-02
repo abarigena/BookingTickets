@@ -59,17 +59,4 @@ public class SpringSecurityConfig {
         return httpSecurity.build();
     }
 
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()  // Временно разрешить все запросы
-                )
-                .csrf(crsf -> crsf.disable())
-                .formLogin(form -> form.disable())  // Отключить форму логина для теста
-                .httpBasic(http -> http.disable()); // Отключить базовую авторизацию для теста
-
-        return httpSecurity.build();
-    }*/
-
 }
