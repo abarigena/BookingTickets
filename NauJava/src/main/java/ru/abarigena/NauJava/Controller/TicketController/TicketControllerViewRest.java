@@ -9,6 +9,9 @@ import ru.abarigena.NauJava.Service.TicketService.TicketService;
 
 import java.util.List;
 
+/**
+ * REST-контроллер для отображения активных и исторических данных по билетам.
+ */
 @RestController
 @RequestMapping("/api/ticketsView")
 public class TicketControllerViewRest {
@@ -20,18 +23,36 @@ public class TicketControllerViewRest {
         this.ticketHistoryService = ticketHistoryService;
     }
 
+    /**
+     * Возвращает список активных билетов для указанного пользователя.
+     *
+     * @param userId ID пользователя.
+     * @return Список активных билетов.
+     */
     @GetMapping("/active")
     public ResponseEntity<List<Ticket>> getActiveTickets(@RequestParam Long userId) {
         List<Ticket> activeTickets = ticketService.getActiveTicketsByUserId(userId);
         return ResponseEntity.ok(activeTickets);
     }
 
+    /**
+     * Возвращает историю отмененных и истекших билетов пользователя.
+     *
+     * @param userId ID пользователя.
+     * @return Список исторических билетов.
+     */
     @GetMapping("/history")
     public ResponseEntity<List<TicketHistory>> getTicketHistory(@RequestParam Long userId) {
         List<TicketHistory> tickets = ticketHistoryService.getCanceledAndExpiredTicketsForUser(userId);
         return ResponseEntity.ok(tickets);
     }
 
+    /**
+     * Отменяет активный билет.
+     *
+     * @param ticketId ID билета.
+     * @return Сообщение об успешной отмене.
+     */
     @PostMapping("/cancel/{ticketId}")
     public ResponseEntity<String> cancelTicket(@PathVariable Long ticketId) {
         ticketService.cancelBookTicket(ticketId);

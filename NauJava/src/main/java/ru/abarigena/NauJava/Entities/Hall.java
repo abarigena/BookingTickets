@@ -18,6 +18,9 @@ public class Hall {
     @Column(unique = true)
     private String name;
 
+    /**
+     * Активен зал или нет.
+     */
     @Column
     private boolean active;
 

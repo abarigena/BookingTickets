@@ -7,6 +7,9 @@ import ru.abarigena.NauJava.Service.TicketService.TicketService;
 
 import java.util.List;
 
+/**
+ * REST-контроллер для управления билетами.
+ */
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketControllerRest {
@@ -17,11 +20,22 @@ public class TicketControllerRest {
         this.ticketService = ticketService;
     }
 
+    /**
+     * Ищет активные билеты по идентификатору.
+     *
+     * @param identifier Идентификатор пользователя или билета.
+     * @return Список активных билетов.
+     */
     @PostMapping("/search")
     public List<Ticket> searchTickets(@RequestParam String identifier) {
         return ticketService.getActiveTicketsByIdentifier(identifier);
     }
 
+    /**
+     * Отменяет бронирование билета.
+     *
+     * @param ticketId ID билета.
+     */
     @PostMapping("/cancel/{ticketId}")
     public void cancelTicket(@PathVariable Long ticketId) {
         ticketService.cancelBookTicket(ticketId);

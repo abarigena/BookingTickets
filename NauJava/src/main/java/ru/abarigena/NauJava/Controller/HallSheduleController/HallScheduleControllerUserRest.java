@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * REST-контроллер для работы с бронированиями мест и расписаниями зала.
+ */
 @RestController
 @RequestMapping("/api/bookings")
 public class HallScheduleControllerUserRest {
@@ -33,6 +36,12 @@ public class HallScheduleControllerUserRest {
         this.userService = userService;
     }
 
+    /**
+     * Возвращает данные о расписании зала и занятых местах.
+     *
+     * @param scheduleId ID расписания.
+     * @return Карта с информацией о расписании, рядах и занятых местах.
+     */
     @GetMapping("/pickPlace/{scheduleId}")
     public Map<String, Object> getHallSchema(@PathVariable Long scheduleId) {
         HallShedule schedule = hallSheduleService.findHallSheduleById(scheduleId);
@@ -46,6 +55,14 @@ public class HallScheduleControllerUserRest {
         );
     }
 
+    /**
+     * Подтверждает выбор мест и создает билеты.
+     *
+     * @param scheduleId    ID расписания.
+     * @param userId        ID пользователя.
+     * @param selectedSeats Список выбранных мест в формате "ряд-место".
+     * @return Ответ с подтверждением или ошибкой.
+     */
     @PostMapping("/pickPlace/{scheduleId}")
     public ResponseEntity<String> confirmSeats(@PathVariable Long scheduleId,
                                                @RequestParam Long userId,

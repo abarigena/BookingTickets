@@ -43,8 +43,20 @@ public interface UserRepository extends CrudRepository<User, Long> {
      */
     User findByEmail(String email);
 
+    /**
+     * Находит пользователя по номеру телефона.
+     *
+     * @param phoneNumber номер телефона пользователя
+     * @return объект {@link User}, соответствующий заданному номеру телефона
+     */
     User findByPhoneNumber(String phoneNumber);
 
+    /**
+     * Находит пользователя по имени пользователя, email или номеру телефона.
+     *
+     * @param identifier идентификатор (имя пользователя, email или номер телефона)
+     * @return объект {@link User}, соответствующий заданному идентификатору
+     */
     @Query("SELECT u FROM User u WHERE u.username = :identifier OR u.email = :identifier OR u.phoneNumber = :identifier")
     User findByUsernameOrEmailOrPhone(@Param("identifier") String identifier);
 }

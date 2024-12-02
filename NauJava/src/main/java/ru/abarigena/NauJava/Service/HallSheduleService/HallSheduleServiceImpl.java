@@ -40,49 +40,6 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * Возвращает список всех расписаний.
-     *
-     * @return список объектов {@link HallShedule}
-     */
-    @Override
-    public List<HallShedule> findAllHallShedules() {
-        return (List<HallShedule>) hallSheduleRepository.findAll();
-    }
-
-    /**
-     * Находит расписания по указанной дате.
-     *
-     * @param date дата
-     * @return список расписаний
-     */
-    @Override
-    public List<HallShedule> findAllHallShedulesByDate(LocalDateTime date) {
-        return List.of();
-    }
-
-    /**
-     * Находит расписания по фильму.
-     *
-     * @param film объект {@link Film}
-     * @return список расписаний
-     */
-    @Override
-    public List<HallShedule> findAllHallShedulesByFilm(Film film) {
-        return List.of();
-    }
-
-    /**
-     * Находит расписания по залу.
-     *
-     * @param hall объект {@link Hall}
-     * @return список расписаний
-     */
-    @Override
-    public List<HallShedule> findAllHallShedulesByHall(Hall hall) {
-        return List.of();
-    }
-
-    /**
      * Создает новое расписание.
      *
      * @param date дата и время начала
@@ -195,8 +152,10 @@ public class HallSheduleServiceImpl implements HallSheduleService {
     }
 
     /**
-     * @param film
-     * @return
+     * Получает расписания для конкретного фильма, сгруппированные по датам и залам.
+     *
+     * @param film фильм, для которого нужно получить расписания
+     * @return расписания для фильма, сгруппированные по датам и залам
      */
     @Override
     public Map<LocalDate, Map<Hall, List<HallShedule>>> getSchedulesForFilm(Film film) {

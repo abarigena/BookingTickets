@@ -41,6 +41,7 @@ public class HallRowServiceImpl implements HallRowService {
      */
     @Override
     public HallRow createRow(Hall hall, int seatCount) {
+        logger.info("Создание нового ряда для зала с ID: {} с количеством мест: {}", hall.getId(), seatCount);
         // Находим последний ряд для данного зала, если есть
         Integer maxRow = hallRowRepository.findMaxRowByHall(hall);
 
@@ -52,6 +53,8 @@ public class HallRowServiceImpl implements HallRowService {
         hallRow.setSeatCount(seatCount);
         hallRow.setHall(hall);
 
+        logger.info("Ряд создан с ID: {} и номером: {}", hallRow.getId(), hallRow.getRow());
+
         return hallRowRepository.save(hallRow);
     }
 
@@ -62,9 +65,10 @@ public class HallRowServiceImpl implements HallRowService {
      */
     @Override
     public void deleteRow(HallRow hallRow) {
+        logger.info("Удаление ряда с ID: {} и номером: {}", hallRow.getId(), hallRow.getRow());
         hallRowRepository.delete(hallRow);
 
-        // Перенумерация всех рядов в зале
+        logger.info("Перенумерация оставшихся рядов для зала с ID: {}", hallRow.getHall().getId());
         List<HallRow> rows = hallRowRepository.findByHallOrderByRow(hallRow.getHall());
         int newRowNumber = 1;
 
@@ -72,6 +76,7 @@ public class HallRowServiceImpl implements HallRowService {
             row.setRow(newRowNumber++);
             hallRowRepository.save(row);
         }
+        logger.info("Перенумерация завершена. Количество рядов: {}", rows.size());
     }
 
     /**
@@ -83,13 +88,12 @@ public class HallRowServiceImpl implements HallRowService {
      */
     @Override
     public HallRow updateRow(Long id, int seatCount) {
-        // Найти ряд по id
+        logger.info("Обновление ряда с ID: {}. Новое количество мест: {}", id, seatCount);
         HallRow hallRow = hallRowRepository.findById(id).orElseThrow(() -> new RuntimeException("HallRow not found"));
 
-        // Обновить количество мест
         hallRow.setSeatCount(seatCount);
 
-        // Сохранить обновленный ряд
+        logger.info("Ряд с ID: {} успешно обновлен. Количество мест: {}", hallRow.getId(), hallRow.getSeatCount());
         return hallRowRepository.save(hallRow);
     }
 

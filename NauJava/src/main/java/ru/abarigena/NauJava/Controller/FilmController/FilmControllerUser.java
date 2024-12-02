@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер для отображения информации о фильмах для пользователей.
+ */
 @Controller
 @RequestMapping("/filmsView")
 public class FilmControllerUser {
@@ -31,6 +34,14 @@ public class FilmControllerUser {
         this.hallSheduleService = hallSheduleService;
     }
 
+    /**
+     * Отображает информацию о фильме и его расписание.
+     *
+     * @param id   ID фильма
+     * @param day  выбранный день для фильтрации расписания (необязательно)
+     * @param model модель для передачи данных в представление
+     * @return имя представления
+     */
     @GetMapping("/{id}")
     public String viewFilm(@PathVariable("id") Long id,
                            @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day,

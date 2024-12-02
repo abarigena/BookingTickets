@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * REST-контроллер для получения информации о фильмах и их расписаниях для пользователей.
+ */
 @RestController
 @RequestMapping("/api/filmsUser")
 public class FilmControllerUserRest {
@@ -26,6 +29,13 @@ public class FilmControllerUserRest {
         this.hallSheduleService = hallSheduleService;
     }
 
+    /**
+     * Возвращает информацию о фильме и его расписании.
+     *
+     * @param id  ID фильма
+     * @param day выбранный день для фильтрации расписания (необязательно)
+     * @return информация о фильме, уникальные дни и отфильтрованное расписание
+     */
     @GetMapping("/{id}")
     public Map<String, Object> viewFilm(@PathVariable("id") Long id,
                                         @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
