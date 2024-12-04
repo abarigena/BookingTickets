@@ -12,6 +12,7 @@
         <option th:value="@{'/admin/hallShedules?day=' + ${day}}" th:text="${day}"></option>
     </th:block>
 </select>
+<a href="/admin"><button>Вернуться на панель администрирования</button></a>
 <a href="/admin/hallShedules/create" class="create-button">Создать расписание</a>
 
 <div th:if="${groupedSchedules}">

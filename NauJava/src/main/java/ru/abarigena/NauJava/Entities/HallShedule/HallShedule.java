@@ -1,6 +1,8 @@
-package ru.abarigena.NauJava.Entities;
+package ru.abarigena.NauJava.Entities.HallShedule;
 
 import jakarta.persistence.*;
+import ru.abarigena.NauJava.Entities.Film;
+import ru.abarigena.NauJava.Entities.Hall;
 
 import java.time.LocalDateTime;
 

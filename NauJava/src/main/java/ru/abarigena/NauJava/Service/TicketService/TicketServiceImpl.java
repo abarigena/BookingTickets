@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
 import ru.abarigena.NauJava.Entities.Ticket.TicketStatus;
 import ru.abarigena.NauJava.Entities.User.User;

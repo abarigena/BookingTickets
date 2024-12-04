@@ -14,6 +14,7 @@ public enum TicketStatus {
      */
     CANCELED,
 
+    CONFIRMED,
     /**
      * Билет использован.
      */

@@ -6,9 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.abarigena.NauJava.Entities.Film;
 import ru.abarigena.NauJava.Entities.Hall;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

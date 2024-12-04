@@ -1,7 +1,7 @@
 package ru.abarigena.NauJava.Entities.Ticket;
 
 import jakarta.persistence.*;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Entities.User.User;
 
 import java.time.LocalDateTime;

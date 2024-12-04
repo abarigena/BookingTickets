@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.abarigena.NauJava.Entities.Film;
 import ru.abarigena.NauJava.Entities.Hall;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.GroupedSchedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Repository.HallSheduleRepository;
 import ru.abarigena.NauJava.Service.TicketService.TicketServiceImpl;
 
@@ -171,6 +172,40 @@ public class HallSheduleServiceImpl implements HallSheduleService {
                         schedule -> schedule.getStartTime().toLocalDate(), // Группировка по дате
                         Collectors.groupingBy(HallShedule::getHall)        // Вложенная группировка по залу
                 ));
+    }
+
+    /**
+     * Получает все расписания залов из репозитория и группирует их по дате, фильму и залу.
+     * Затем преобразует сгруппированные данные в список объектов {@link GroupedSchedule}.
+     *
+     * @return Список объектов {@link GroupedSchedule}, каждый из которых представляет группу расписаний
+     *         для конкретной даты, фильма и зала, с соответствующим списком записей {@link HallShedule}.
+     */
+    @Override
+    public List<GroupedSchedule> getGroupedSchedulesRest() {
+        List<HallShedule> schedules = (List<HallShedule>) hallSheduleRepository.findAll();
+
+        return schedules.stream()
+                .collect(Collectors.groupingBy(
+                        schedule -> schedule.getStartTime().toLocalDate(),
+                        Collectors.groupingBy(
+                                HallShedule::getFilm,
+                                Collectors.groupingBy(HallShedule::getHall)
+                        )
+                ))
+                .entrySet()
+                .stream()
+                .flatMap(dateEntry -> dateEntry.getValue().entrySet().stream()
+                        .flatMap(filmEntry -> filmEntry.getValue().entrySet().stream()
+                                .map(hallEntry -> new GroupedSchedule(
+                                        dateEntry.getKey(),
+                                        filmEntry.getKey(),
+                                        hallEntry.getKey(),
+                                        hallEntry.getValue()
+                                ))
+                        )
+                )
+                .collect(Collectors.toList());
     }
 
 }

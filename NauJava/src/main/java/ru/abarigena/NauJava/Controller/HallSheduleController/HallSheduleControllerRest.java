@@ -2,10 +2,9 @@ package ru.abarigena.NauJava.Controller.HallSheduleController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.abarigena.NauJava.Entities.Film;
-import ru.abarigena.NauJava.Entities.Hall;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.GroupedSchedule;
 import ru.abarigena.NauJava.Service.FilmService.FilmService;
 import ru.abarigena.NauJava.Service.HallService.HallService;
 import ru.abarigena.NauJava.Service.HallSheduleService.HallSheduleService;
@@ -13,7 +12,7 @@ import ru.abarigena.NauJava.Service.HallSheduleService.HallSheduleService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * REST-контроллер для управления расписаниями залов.
@@ -73,8 +72,9 @@ public class HallSheduleControllerRest {
      * @param id ID расписания.
      */
     @DeleteMapping("/delete/{id}")
-    public void deleteHallShedule(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteHallShedule(@PathVariable Long id) {
         hallSheduleService.deleteHallShedule(id);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -84,9 +84,17 @@ public class HallSheduleControllerRest {
      * @return Сгруппированные расписания.
      */
     @GetMapping("/all")
-    public Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> getHallSchedules(
+    public List<GroupedSchedule> getHallSchedules(
             @RequestParam(value = "day", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate day) {
-        Map<LocalDate, Map<Film, Map<Hall, List<HallShedule>>>> groupedSchedules = hallSheduleService.getGroupedSchedules();
-        return (day != null) ? Map.of(day, groupedSchedules.get(day)) : groupedSchedules;
+        List<GroupedSchedule> groupedSchedules = hallSheduleService.getGroupedSchedulesRest();
+
+        if (day != null) {
+            return groupedSchedules.stream()
+                    .filter(schedule -> schedule.getDate().equals(day))
+                    .collect(Collectors.toList());
+        }
+
+        return groupedSchedules;
     }
+
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.abarigena.NauJava.Entities.HallRow;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
 import ru.abarigena.NauJava.Entities.User.User;
 import ru.abarigena.NauJava.Service.HallRowService.HallRowService;

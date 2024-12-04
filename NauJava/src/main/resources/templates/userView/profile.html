@@ -12,6 +12,8 @@
 <a href="/tickets/active"><button>Актуальные билеты</button></a>
 <a href="/tickets/history"><button>История билетов</button></a>
 
+<a href="/bookTicket"><button>Вернуться к расписанию</button></a>
+
 <form th:action="@{/profile}" method="post">
     <label for="firstName">Имя:</label>
     <input type="text" id="firstName" name="firstName" th:value="${user.firstName}" required>

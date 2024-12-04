@@ -1,6 +1,6 @@
 package ru.abarigena.NauJava.Service.TicketService;
 
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Entities.Ticket.Ticket;
 
 import java.util.List;
