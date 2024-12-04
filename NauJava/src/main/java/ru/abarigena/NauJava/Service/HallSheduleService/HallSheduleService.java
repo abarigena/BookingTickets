@@ -2,7 +2,8 @@ package ru.abarigena.NauJava.Service.HallSheduleService;
 
 import ru.abarigena.NauJava.Entities.Film;
 import ru.abarigena.NauJava.Entities.Hall;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.GroupedSchedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -77,4 +78,10 @@ public interface HallSheduleService {
      * @return расписания для фильма, сгруппированные по датам и залам
      */
     Map<LocalDate, Map<Hall, List<HallShedule>>> getSchedulesForFilm(Film film);
+
+    /**
+     * Группирует данные в список объектов {@link GroupedSchedule}.
+     * @return Список объектов {@link GroupedSchedule}
+     */
+    List<GroupedSchedule> getGroupedSchedulesRest();
 }

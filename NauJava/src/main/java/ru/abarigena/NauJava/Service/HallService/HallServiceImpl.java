@@ -49,6 +49,7 @@ public class HallServiceImpl implements HallService {
         try {
 
             List<HallRow> hallRows = hallRowRepository.findHallRowsByHallId(id);
+            logger.info("Найдено рядов для удаления: {}", hallRows.size());
             hallRowRepository.deleteAll(hallRows);
 
             hallRepository.deleteById(id);

@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import ru.abarigena.NauJava.Entities.Film;
 import ru.abarigena.NauJava.Entities.Hall;
-import ru.abarigena.NauJava.Entities.HallShedule;
+import ru.abarigena.NauJava.Entities.HallShedule.HallShedule;
 import ru.abarigena.NauJava.Service.FilmService.FilmService;
 import ru.abarigena.NauJava.Service.HallSheduleService.HallSheduleService;
 
