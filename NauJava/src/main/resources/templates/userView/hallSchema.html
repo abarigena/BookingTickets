@@ -17,6 +17,8 @@
 <h2 th:text="'Фильм: ' + ${schedule.film.title}"></h2>
 <h3 th:text="'Время начала: ' + ${schedule.startTime}"></h3>
 
+<a href="/bookTicket"><button>Вернуться к расписанию</button></a>
+
 <div th:if="${error}" th:text="${error}" style="color: red;"></div>
 
 <form th:action="@{/bookTicket/pickPlace/{scheduleId}(scheduleId=${schedule.id})}" method="post">
@@ -51,6 +53,5 @@
     </table>
     <button type="submit">Подтвердить выбор</button>
 </form>
-<a href="/bookTicket"><button>Вернуться к расписанию</button></a>
 </body>
 </html>

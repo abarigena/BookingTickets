@@ -7,7 +7,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingdb
       SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: hgfhgf2233
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
       SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQL82Dialect
     ports:
@@ -17,7 +17,7 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: hgfhgf2233
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: bookingdb
       PGDATA: /data/postgres
     volumes:
