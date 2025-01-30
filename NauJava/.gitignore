@@ -35,7 +35,9 @@ build/
 
 
 # Application properties
-src/main/resources/application.properties
+NauJava/src/main/resources/application.properties
+**/application.properties
 
 # Environment files
 .env
+*.env
